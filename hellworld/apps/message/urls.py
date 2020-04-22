@@ -17,5 +17,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('index/', views.index, name='index'),
+    path(r'', views.index, name='index'),
+    path(r'submit/', views.submit, name='submit'),
+    path(r'student/', views.student, name='student'),
 ]

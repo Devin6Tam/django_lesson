@@ -26,6 +26,7 @@ SECRET_KEY = 'fp22%ca*sdaydh80^gb(wb3k0m))&qrjh*w4ounkyo&qz_z=8n'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# DEBUG 为False时，需要配置起来
 ALLOWED_HOSTS = []
 
 
@@ -38,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.users'
+    'apps.user',
+    'apps.message',
 ]
 
 MIDDLEWARE = [
@@ -69,11 +71,6 @@ TEMPLATES = [
                 # 使用多媒体文件时，{{ MEDIA_URL }}
                 'django.template.context_processors.media',
             ],
-            # 引用静态文件，添加在这个位置
-            # 'builtins': [
-            #     'django.templatetags.static'
-            #     ''
-            # ],
         },
     },
 ]
@@ -141,8 +138,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+# 静态文件存放路径
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
+    # '/data0/static/',
 ]
 
 # 媒体文件访问路径
