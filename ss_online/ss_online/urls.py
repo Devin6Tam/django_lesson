@@ -1,4 +1,4 @@
-"""hellworld URL Configuration
+"""ss_online URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -13,12 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.contrib import admin
 from django.urls import path
-from . import views
 
 urlpatterns = [
-    # path(r'', views.index, name='index'),
-    path(r'', views.CBV_Message_Submit_View.as_view(), name='submit_view'),
-    path(r'submit/', views.submit, name='submit'),
-    path(r'student/', views.student, name='student'),
+    path('admin/', admin.site.urls),
+    # # 用户模块
+    # path('user/', admin.site.urls),
+    # # 课程模块
+    # path('cource/', admin.site.urls),
+    # # 培训机构模块
+    # path('organization/', admin.site.urls),
+    # # 用户操作模块
+    # path('operation/', admin.site.urls),
+    # # 讲师模块
+    # path('teacher/', admin.site.urls),
 ]
