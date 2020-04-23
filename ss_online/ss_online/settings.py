@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'apps.course',
     'apps.organization',
     'apps.operation',
-    'apps.teacher',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +138,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     '/var/www/static/',
 ]
+
+# 指定用户信息表
+AUTH_USER_MODEL = 'user.UserProfile'
