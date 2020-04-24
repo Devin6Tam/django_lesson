@@ -19,7 +19,7 @@ class Courses(BaseModel):
     youneed_know = models.CharField(max_length=200, default='', verbose_name='课程须知')
     tearcher_tell = models.CharField(max_length=200, default='', verbose_name='老师告诉你')
     detail = models.CharField(max_length=300, default='', verbose_name='课程详情')
-    image = models.ImageField(upload_to='courses/%Y/%m', verbose_name='课程封面')
+    image = models.ImageField(upload_to='media/courses/%Y/%m', verbose_name='课程封面')
     course_fee = models.DecimalField(max_digits=18, decimal_places=2, verbose_name='课程费用')
 
     class Meta:
@@ -60,7 +60,7 @@ class Videos(BaseModel):
 class CourseSource(BaseModel):
     course = models.ForeignKey(Courses, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name="名称")
-    file = models.FileField(upload_to='courses/%Y/%m', verbose_name='下载地址')
+    file = models.FileField(upload_to='media/courses/%Y/%m', verbose_name='下载地址')
 
     class Meta:
         verbose_name = '课程资源'
