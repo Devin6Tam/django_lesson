@@ -1,0 +1,6 @@
+1. 下载xadmin源码
+2. 在settings的INSTALLED_APPS中添加
+    crispy_forms 和 xadmin
+3. 安装xadmin的依赖包 pip install -r requirements.txt
+4. 把djanoUeditor 文件放置到虚拟环境的site-packages目录之下
+5. 通过migrate生成xadmin需要的表
