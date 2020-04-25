@@ -20,9 +20,9 @@ class UserMessageAdmin(admin.ModelAdmin):
 class UserCourseAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(Banner, BannerAdmin)
-admin.site.register(UserAsk, UserAskAdmin)
-admin.site.register(CourseComments, CourseCommentAdmin)
-admin.site.register(UserFavorite, UserFavoriteAdmin)
-admin.site.register(UserMessage, UserMessageAdmin)
-admin.site.register(UserCourse, UserCourseAdmin)
+# admin.site.register(Banner, BannerAdmin)
+# admin.site.register(UserAsk, UserAskAdmin)
+# admin.site.register(CourseComments, CourseCommentAdmin)
+# admin.site.register(UserFavorite, UserFavoriteAdmin)
+# admin.site.register(UserMessage, UserMessageAdmin)
+# admin.site.register(UserCourse, UserCourseAdmin)

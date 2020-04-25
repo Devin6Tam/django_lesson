@@ -16,8 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+import xadmin
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
+    path('xadmin/', xadmin.site.urls),
     # # 用户模块
     # path('user/', admin.site.urls),
     # # 课程模块

@@ -11,6 +11,6 @@ class TeacherAdmin(admin.ModelAdmin):
 class CourseOrgAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(Citys, CityAdmin)
-admin.site.register(Teachers, TeacherAdmin)
-admin.site.register(CourseOrg, CourseOrgAdmin)
+# admin.site.register(Citys, CityAdmin)
+# admin.site.register(Teachers, TeacherAdmin)
+# admin.site.register(CourseOrg, CourseOrgAdmin)

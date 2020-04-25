@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'apps.course',
     'apps.organization',
     'apps.operation',
+    'crispy_forms',
+    'xadmin',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +128,8 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+# 使用时区
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
