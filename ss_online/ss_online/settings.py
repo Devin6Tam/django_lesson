@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.operation',
     'crispy_forms',
     'xadmin',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -134,13 +135,15 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
+STATIC_ROOT = '/static/'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    '/var/www/static/',
+    # '/var/www/static/',
 ]
 
 # 指定用户信息表
 AUTH_USER_MODEL = 'user.UserProfile'
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
