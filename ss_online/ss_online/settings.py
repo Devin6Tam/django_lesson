@@ -135,6 +135,9 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+# 静态资源文件访问路径
+# STATIC_ROOT可以不加，但导出依赖库的静态文件，需要使用到
 STATIC_ROOT = '/static/'
 STATIC_URL = '/static/'
 
@@ -142,6 +145,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     # '/var/www/static/',
 ]
+
+# 媒体文件访问路径
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # 指定用户信息表
 AUTH_USER_MODEL = 'user.UserProfile'

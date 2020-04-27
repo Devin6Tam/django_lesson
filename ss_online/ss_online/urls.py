@@ -15,20 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from django.views.generic import TemplateView
+from apps.user.views import UserLoginView
 import xadmin
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('xadmin/', xadmin.site.urls),
-    # # 用户模块
-    # path('user/', admin.site.urls),
-    # # 课程模块
-    # path('cource/', admin.site.urls),
-    # # 培训机构模块
-    # path('organization/', admin.site.urls),
-    # # 用户操作模块
-    # path('operation/', admin.site.urls),
-    # # 讲师模块
-    # path('teacher/', admin.site.urls),
+    path('', TemplateView.as_view(template_name='index.html'), name="index"),
+    path('login/', UserLoginView.as_view(), name='login'),
 ]

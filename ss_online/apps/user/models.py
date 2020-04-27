@@ -4,7 +4,7 @@ import datetime
 # Create your models here.
 
 class BaseModel(models.Model):
-    add_time = models.DateTimeField(default=datetime.datetime.now)
+    add_time = models.DateTimeField(default=datetime.datetime.now, verbose_name='创建时间')
     class Meta:
         abstract = True
 

@@ -45,11 +45,28 @@ class CityAdmin(object):
     }
 
 class TeacherAdmin(object):
-    pass
+    # 列表页显示字段
+    list_display = ['org', 'name', 'age', 'work_year', 'work_company', 'work_position']
+    # 支持搜索的字段
+    search_fields = ['org', 'name', 'work_year']
+    # 过滤筛选的字段
+    list_filter = ['work_year', 'work_position']
+    # 列表字段支持编辑
+    list_editable = ['name', 'age']
+    # 分页
+    list_per_page = 10
 
 class CourseOrgAdmin(object):
-    pass
-
+    # 列表页显示字段
+    list_display = ['name', 'tag', 'categroy', 'course_num', 'city']
+    # 支持搜索的字段
+    search_fields = ['name', 'tag', 'city']
+    # 过滤筛选的字段
+    list_filter = ['name', 'city']
+    # 列表字段支持编辑
+    list_editable = ['name', 'city']
+    # 分页
+    list_per_page = 10
 
 class BaseSettings(object):
     enable_themes = True

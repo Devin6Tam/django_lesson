@@ -34,7 +34,7 @@ class CourseOrg(BaseModel):
         return self.name
 
 class Teachers(BaseModel):
-    org = models.ForeignKey(CourseOrg, on_delete=models.CASCADE)
+    org = models.ForeignKey(CourseOrg, on_delete=models.CASCADE, verbose_name='所在机构')
     name = models.CharField(max_length=50, verbose_name='讲师名称')
     age = models.IntegerField(default=20, verbose_name='年龄')
     work_year = models.IntegerField(default=0, verbose_name='工作年限')

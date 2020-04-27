@@ -31,7 +31,7 @@ class Courses(BaseModel):
 
 # 课程章节
 class Lessons(BaseModel):
-    course = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    course = models.ForeignKey(Courses, on_delete=models.CASCADE, verbose_name="课程名称")
     name = models.CharField(max_length=50, verbose_name="章节名称")
     learn_time = models.IntegerField(default=0, verbose_name="学习时长")
 
@@ -44,7 +44,7 @@ class Lessons(BaseModel):
 
 # 学习视频
 class Videos(BaseModel):
-    lesson = models.ForeignKey(Lessons, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lessons, on_delete=models.CASCADE, verbose_name="章节名称")
     name = models.CharField(max_length=100, verbose_name='视频名称')
     learn_time = models.IntegerField(default=0, verbose_name='学习时长')
     url = models.CharField(max_length=200, verbose_name='视频地址')
@@ -58,7 +58,7 @@ class Videos(BaseModel):
 
 # 课程资源信息（资源下载地址）
 class CourseSource(BaseModel):
-    course = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    course = models.ForeignKey(Courses, on_delete=models.CASCADE, verbose_name="课程名称")
     name = models.CharField(max_length=100, verbose_name="名称")
     file = models.FileField(upload_to='media/courses/%Y/%m', verbose_name='下载地址')
 
