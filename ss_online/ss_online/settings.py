@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'xadmin',
     'import_export',
+    'captcha',
 ]
 
 MIDDLEWARE = [

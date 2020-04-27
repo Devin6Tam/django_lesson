@@ -3,13 +3,19 @@ from django.urls import reverse
 from django.views import View
 from django.http import HttpResponse
 from .models import UserProfile
-from .forms import LoginForm
-from django.contrib.auth import authenticate, login
-# Create your views here.
+from .forms import LoginForm, DynamicLoginForm
+from django.contrib.auth import authenticate, login, logout
 
+
+# Create your views here.
+# 用户登录
 class UserLoginView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'login.html')
+        # return render(request, 'login.html')
+        if request.user.is_authenticated:
+            return redirect(reverse('index'))
+        form = DynamicLoginForm()
+        return render(request, 'login.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
         login_form = LoginForm(request.POST)
@@ -30,6 +36,19 @@ class UserLoginView(View):
                 # return render(request, 'index.html')
                 return redirect(reverse('index'), {'request': request})
             else:
-                return HttpResponse('invalid password')
+                # return HttpResponse('invalid password')
+
+                return render(request, 'login.html', {'form': login_form, 'msg': '用户名或者密码错误'})
         else:
             return render(request, 'login.html', {'form': login_form})
+
+# 用户登出
+class UserLogoutView(View):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect(reverse('login'))
+
+class SendSmsView(View):
+    def post(self, request, *args, **kwargs):
+
+        pass

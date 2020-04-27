@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2020/4/26 0:23
 # @Author  : tanxw
+import import_export
 
 import xadmin
 from .models import Courses, Lessons, Videos, CourseSource
-
+from .resources import CourseResource
 
 class CourseAdmin(object):
     # 列表页显示字段
@@ -18,6 +19,8 @@ class CourseAdmin(object):
     list_editable = ['name', 'degree', 'category']
     # 分页
     list_per_page = 10
+
+    import_export_args = {'import_resource_class': CourseSource, 'export_resource_class': CourseSource}
 
 class LessonAdmin(object):
     # 列表页显示字段

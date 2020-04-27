@@ -1,28 +1,8 @@
 import xadmin
 from import_export import resources
 from .models import CourseOrg, Citys, Teachers
+from .resources import CityResource
 # Register your models here.
-
-class ProductInfoResource(resources.ModelResource):
-
-    class Meta:
-        model = Citys
-        skip_unchanged = True
-        # 导入数据时，如果该条数据未修改过，则会忽略
-        report_skipped = True
-        # 在导入预览页面中显示跳过的记录
-        import_id_fields = ('id',)
-        # 对象标识的默认字段是id，您可以选择在导入时设置哪些字段用作id
-        fields = (
-            'id',
-            'name',
-            'desc',
-        )
-        # 白名单
-        exclude = (
-            'add_time',
-        )
-        # 黑名单
 
 class CityAdmin(object):
     # 列表页显示字段
@@ -40,8 +20,8 @@ class CityAdmin(object):
 
     # 配置导出导入功能
     import_export_args = {
-        'import_resource_class': ProductInfoResource,
-        'export_resource_class': ProductInfoResource,
+        'import_resource_class': CityResource,
+        'export_resource_class': CityResource,
     }
 
 class TeacherAdmin(object):
