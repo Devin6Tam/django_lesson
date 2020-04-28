@@ -114,6 +114,7 @@ $(function() {
         if(!verify){
             return;
         }
+        var csrftoken = getCookie('csrftoken');
         $.ajax({
             cache: false,
             type: 'post',
@@ -121,11 +122,12 @@ $(function() {
             url:"/send_sms/",
             data:{
                 mobile:$inpRegMobile.val(),
-                "captcha_1":$inpRegCaptcha.val(),
-                "captcha_0":$('#id_captcha_0').val(),
+                captcha_1:$inpRegCaptcha.val(),
+                captcha_0:$('#id_captcha_0').val(),
             },
             async: true,
             beforeSend:function(XMLHttpRequest){
+                XMLHttpRequest.setRequestHeader("X-CSRFToken", csrftoken);
                 $sendBtn.val("发送中...");
                 $sendBtn.attr("disabled","disabled");
             },
@@ -143,6 +145,10 @@ $(function() {
                     $sendBtn.val("重新发送");
                     refresh_captcha({"data":{"form_id":"jsRefreshCode"}});
                 }else if(data.status == 'success'){
+                    Dml.fun.showErrorTips($tipsId, "短信验证码已发送");
+                    $sendBtn.attr("disabled","disabled");
+                    show_send_sms(60);
+                }else {
                     Dml.fun.showErrorTips($tipsId, "短信验证码已发送");
                     $sendBtn.attr("disabled","disabled");
                     show_send_sms(60);
@@ -168,16 +174,32 @@ $(function() {
         refresh_captcha();
     });
 
+    function getCookie(name) {
+         var cookieValue = null;
+         if (document.cookie && document.cookie != '') {
+             var cookies = document.cookie.split(';');
+             for (var i = 0; i < cookies.length; i++) {
+                 var cookie = jQuery.trim(cookies[i]);
+                 // Does this cookie string begin with the name we want?
+                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                     break;
+                 }
+             }
+         }
+         return cookieValue;
+     };
+
     //重发送短信验证码计时
     function show_send_sms(time){
-    $('#jsSendCode').val(time+"秒后重发");
-    if(time<=0){
-        clearTimeout(send_sms_time);
-        $('#jsMobileTips').hide(500);
-         $('#jsSendCode').val("发送验证码").removeAttr("disabled");
-        return;
+        $('#jsSendCode').val(time+"秒后重发");
+        if(time<=0){
+            clearTimeout(send_sms_time);
+            $('#jsMobileTips').hide(500);
+             $('#jsSendCode').val("发送验证码").removeAttr("disabled");
+            return;
+        }
+        time--;
+        send_sms_time = setTimeout("show_send_sms("+time+")", 1000);
     }
-    time--;
-    send_sms_time = setTimeout("show_send_sms("+time+")", 1000);
-}
 });

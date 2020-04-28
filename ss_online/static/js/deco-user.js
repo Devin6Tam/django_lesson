@@ -141,6 +141,7 @@ function sendCodeChangePhone($btn){
                 mobile:$("#jsChangePhone").val(),
                 captcha_1:$("#id_captcha_1").val(),
                 captcha_0:$('#id_captcha_0').val(),
+                csrfmiddlewaretoken: '{% csrf_token %}',
         },
         beforeSend:function(XMLHttpRequest){
             $btn.val("发送中...");

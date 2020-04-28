@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+
 from .models import UserProfile
-from .forms import LoginForm, DynamicLoginForm
+from .forms import LoginForm, DynamicLoginForm, SmsCodeForm
 from django.contrib.auth import authenticate, login, logout
+import random
+import redis
+from django.conf import settings
 
 
 # Create your views here.
@@ -42,13 +46,26 @@ class UserLoginView(View):
         else:
             return render(request, 'login.html', {'form': login_form})
 
+
 # 用户登出
 class UserLogoutView(View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect(reverse('login'))
 
+
+# 发送短信
 class SendSmsView(View):
     def post(self, request, *args, **kwargs):
-
-        pass
+        form = DynamicLoginForm(request.POST)
+        if form.is_valid():
+            mobile = form.cleaned_data['mobile']
+            verify_code = '%08d' % random.randint(0, 999999)
+            print(verify_code)
+            # redis_conn = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
+            #                          db=settings.REDIS_DB, password=settings.REDIS_PASSWORD, encoding='utf8')
+            redis_conn = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
+                                     db=settings.REDIS_DB, encoding='utf8')
+            redis_conn.setex(mobile, 5 * 60, verify_code)
+            return JsonResponse('OK!')
+        return HttpResponse('error!')
