@@ -1,6 +1,7 @@
 from django import forms
 from captcha.fields import CaptchaField
-
+from django.conf import settings
+import redis
 class LoginForm(forms.Form):
     #  需要校验的字段，一定要跟前端中的name属性对应
     username = forms.CharField(required=True, min_length=3, max_length=30)
@@ -8,9 +9,27 @@ class LoginForm(forms.Form):
 
 
 class DynamicLoginForm(forms.Form):
+    """验证码的展示及正确性校验"""
     mobile = forms.CharField(required=True, max_length=11, min_length=11)
     captcha = CaptchaField(required=True, error_messages={'invalid': "验证码错误"})
 
 class SmsCodeForm(forms.Form):
+    """用户使用动态登录的时候，进行数据校验，在redis 查询验证码"""
     mobile = forms.CharField(max_length=11, min_length=11, required=True)
-    captcha = CaptchaField(required=True, error_messages={'invalid': "验证码错误"})
+    code = forms.CharField(max_length=6, min_length=6, required=True)
+
+    def clean_code(self):
+        # 创建redis连接
+        redis_conn = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
+                                 db=settings.REDIS_DB, encoding='utf8')
+        # 获取用户输入的手机号码
+        recv_mobile = self.data.get('mobile')
+        # 获取用户输入的短信验证码
+        recv_code = self.data.get('code')
+
+        print('recv_mobile', recv_mobile, type(recv_mobile))
+        # 从redis库中获取缓存的短信验证码
+        store_code = redis_conn.get(recv_mobile).decode()
+        if recv_code == store_code:
+            return self.cleaned_data
+        raise forms.ValidationError('短信验证码错误！')

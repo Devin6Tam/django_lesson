@@ -12,8 +12,9 @@ from django.conf import settings
 
 
 # Create your views here.
-# 用户登录
+# 用户密码登录
 class UserLoginView(View):
+    """get请求的时候，展示页面"""
     def get(self, request, *args, **kwargs):
         # return render(request, 'login.html')
         if request.user.is_authenticated:
@@ -21,6 +22,7 @@ class UserLoginView(View):
         form = DynamicLoginForm()
         return render(request, 'login.html', {'form': form})
 
+    """处理用户密码登录请求"""
     def post(self, request, *args, **kwargs):
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
@@ -47,6 +49,19 @@ class UserLoginView(View):
             return render(request, 'login.html', {'form': login_form})
 
 
+# 用户短信验证码登录
+class UserSmsLoginView(View):
+
+    """处理短信验证码登录"""
+    def post(self, request, *args, **kwargs):
+        is_sms_login = True
+        login_form = SmsCodeForm(request.POST)
+        if login_form.is_valid():
+                return redirect('index')
+        else:
+            captcha_form = DynamicLoginForm()
+            return render(request, 'login.html', {'form': login_form, 'is_sms_login': is_sms_login, 'captcha_form': captcha_form})
+
 # 用户登出
 class UserLogoutView(View):
     def get(self, request, *args, **kwargs):
@@ -58,14 +73,19 @@ class UserLogoutView(View):
 class SendSmsView(View):
     def post(self, request, *args, **kwargs):
         form = DynamicLoginForm(request.POST)
+        ret_dict = {}
         if form.is_valid():
             mobile = form.cleaned_data['mobile']
-            verify_code = '%08d' % random.randint(0, 999999)
+            verify_code = '%06d' % random.randint(0, 999999)
             print(verify_code)
             # redis_conn = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
             #                          db=settings.REDIS_DB, password=settings.REDIS_PASSWORD, encoding='utf8')
             redis_conn = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
                                      db=settings.REDIS_DB, encoding='utf8')
             redis_conn.setex(mobile, 5 * 60, verify_code)
-            return JsonResponse('OK!')
-        return HttpResponse('error!')
+            ret_dict['status'] = 'success'
+            return JsonResponse(ret_dict)
+        # ret_dict['msg'] = '参数错误'
+        for k, v in form.errors.items():
+            ret_dict[k] = v[0]
+        return JsonResponse(ret_dict)

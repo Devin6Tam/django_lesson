@@ -148,10 +148,6 @@ $(function() {
                     Dml.fun.showErrorTips($tipsId, "短信验证码已发送");
                     $sendBtn.attr("disabled","disabled");
                     show_send_sms(60);
-                }else {
-                    Dml.fun.showErrorTips($tipsId, "短信验证码已发送");
-                    $sendBtn.attr("disabled","disabled");
-                    show_send_sms(60);
                 }
             }
         });

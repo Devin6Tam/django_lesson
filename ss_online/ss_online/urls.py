@@ -16,15 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from apps.user.views import UserLoginView, UserLogoutView, SendSmsView
+from apps.user.views import UserLoginView, UserSmsLoginView, UserLogoutView, SendSmsView
 import xadmin
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('xadmin/', xadmin.site.urls),
-    path('', TemplateView.as_view(template_name='index.html'), name="index"),
-    path('login/', UserLoginView.as_view(), name='login'),
-    path('send_sms/', SendSmsView.as_view(), name='send_sms'),
-    path('logout/', UserLogoutView.as_view(), name='logout'),
-    path('captcha/', include('captcha.urls')),
+    path(r'xadmin/', xadmin.site.urls),
+    path(r'', TemplateView.as_view(template_name='index.html'), name="index"),
+    path(r'login/', UserLoginView.as_view(), name='login'),
+    path(r'send_sms/', SendSmsView.as_view(), name='send_sms'),
+    path(r'sms_login/', UserSmsLoginView.as_view(), name='sms_login'),
+    path(r'logout/', UserLogoutView.as_view(), name='logout'),
+    path(r'captcha/', include('captcha.urls')),
 ]
