@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from apps.user.views import UserLoginView, UserSmsLoginView, UserLogoutView, SendSmsView
+from apps.user.views import UserLoginView, UserSmsLoginView, RegisterView, UserLogoutView, SendSmsView
 import xadmin
 
 urlpatterns = [
@@ -26,6 +26,7 @@ urlpatterns = [
     path(r'login/', UserLoginView.as_view(), name='login'),
     path(r'send_sms/', SendSmsView.as_view(), name='send_sms'),
     path(r'sms_login/', UserSmsLoginView.as_view(), name='sms_login'),
+    path('register/', RegisterView.as_view(), name='register'),
     path(r'logout/', UserLogoutView.as_view(), name='logout'),
     path(r'captcha/', include('captcha.urls')),
 ]
