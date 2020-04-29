@@ -40,10 +40,11 @@ class BaseUserForm(forms.Form):
 
 
 class SmsCodeForm(BaseUserForm):
-    """用户使用动态登录的时候，进行数据校验，在redis 查询验证码"""
+    """用户使用动态登录的时候，进行数据校验，在redis 获取验证码"""
     pass
 
 class RegisterForm(BaseUserForm):
+    """用户注册的时候，进行数据校验，在redis 获取验证码；校验手机号是否已存在"""
     password = forms.CharField(max_length=20, min_length=6, required=True)
 
     def clean_mobile(self):
