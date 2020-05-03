@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('youneed_know', models.CharField(default='', max_length=200, verbose_name='课程须知')),
                 ('tearcher_tell', models.CharField(default='', max_length=200, verbose_name='老师告诉你')),
                 ('detail', models.CharField(default='', max_length=300, verbose_name='课程详情')),
-                ('image', models.ImageField(upload_to='media/courses/%Y/%m', verbose_name='课程封面')),
+                ('image', models.ImageField(upload_to='courses/%Y/%m', verbose_name='课程封面')),
                 ('course_fee', models.DecimalField(decimal_places=2, max_digits=18, verbose_name='课程费用')),
                 ('course_org', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='organization.CourseOrg', verbose_name='课程机构')),
                 ('tearcher', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='organization.Teachers', verbose_name='课程老师')),
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('add_time', models.DateTimeField(default=datetime.datetime.now)),
                 ('name', models.CharField(max_length=100, verbose_name='名称')),
-                ('file', models.FileField(upload_to='media/courses/%Y/%m', verbose_name='下载地址')),
+                ('file', models.FileField(upload_to='courses/%Y/%m', verbose_name='下载地址')),
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='course.Courses')),
             ],
             options={

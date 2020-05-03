@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('add_time', models.DateTimeField(default=datetime.datetime.now)),
                 ('title', models.CharField(max_length=100, verbose_name='标题')),
-                ('image', models.ImageField(max_length=200, upload_to='media/bannel/%Y/%m', verbose_name='链接图片')),
+                ('image', models.ImageField(max_length=200, upload_to='bannel/%Y/%m', verbose_name='链接图片')),
                 ('url', models.CharField(max_length=200, verbose_name='访问地址')),
                 ('index', models.IntegerField(default=0, verbose_name='顺序')),
             ],

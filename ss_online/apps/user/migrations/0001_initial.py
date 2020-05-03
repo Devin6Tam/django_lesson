@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('gender', models.CharField(choices=[('male', '男'), ('female', '女')], max_length=6, verbose_name='性别')),
                 ('address', models.CharField(default='', max_length=300, verbose_name='地址')),
                 ('mobile', models.CharField(max_length=11, unique=True, verbose_name='手机号码')),
-                ('image', models.ImageField(default='media/default.jpg', upload_to='head_image/%Y/%m', verbose_name='头像')),
+                ('image', models.ImageField(default='default.jpg', upload_to='head_image/%Y/%m', verbose_name='头像')),
                 ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions')),
             ],

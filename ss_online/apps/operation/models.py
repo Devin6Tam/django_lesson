@@ -8,7 +8,7 @@ UserProfile = get_user_model()
 
 class Banner(BaseModel):
     title = models.CharField(max_length=100, verbose_name="标题")
-    image = models.ImageField(upload_to="media/bannel/%Y/%m", max_length=200, verbose_name="链接图片")
+    image = models.ImageField(upload_to="bannel/%Y/%m", max_length=200, verbose_name="链接图片")
     url = models.CharField(max_length=200, verbose_name="访问地址")
     index = models.IntegerField(default=0, verbose_name="顺序")
 

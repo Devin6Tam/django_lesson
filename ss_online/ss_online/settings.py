@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'xadmin',
     'import_export',
     'captcha',
+    'pure_pagination',
 ]
 
 MIDDLEWARE = [
@@ -150,8 +151,15 @@ MEDIA_URL = '/media/'
 # 指定用户信息表
 AUTH_USER_MODEL = 'user.UserProfile'
 
+# 导入导出使用事务
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
+# 列表分页功能
+PAGINATION_SETTINGS = {
+    'PAGE_RANGE_DISPLAYED': 10,
+    'MARGIN_PAGES_DISPLAYED': 2,
+    'SHOW_FIRST_PAGE_WHEN_INVALID': True,
+}
 # redis 数据库
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379

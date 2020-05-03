@@ -13,10 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from django.views.static import serve
+
 from apps.user.views import UserLoginView, UserSmsLoginView, RegisterView, UserLogoutView, SendSmsView
+from django.conf.urls import url
 import xadmin
 
 urlpatterns = [
@@ -29,4 +33,6 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path(r'logout/', UserLogoutView.as_view(), name='logout'),
     path(r'captcha/', include('captcha.urls')),
+    path(r'org/', include(('apps.organization.urls', 'organization'), namespace='org')),
+    url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT})
 ]
