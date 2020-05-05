@@ -34,5 +34,6 @@ urlpatterns = [
     path(r'logout/', UserLogoutView.as_view(), name='logout'),
     path(r'captcha/', include('captcha.urls')),
     path(r'org/', include(('apps.organization.urls', 'organization'), namespace='org')),
+    path(r'op/', include(('apps.operation.urls', 'operation'), namespace='op')),
     url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT})
 ]

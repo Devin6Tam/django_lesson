@@ -18,7 +18,7 @@ class Courses(BaseModel):
     click_num = models.IntegerField(default=0, verbose_name='点击人数')
     youneed_know = models.CharField(max_length=200, default='', verbose_name='课程须知')
     tearcher_tell = models.CharField(max_length=200, default='', verbose_name='老师告诉你')
-    detail = models.CharField(max_length=300, default='', verbose_name='课程详情')
+    detail = models.TextField(max_length=300, default='', verbose_name='课程详情')
     image = models.ImageField(upload_to='courses/%Y/%m', verbose_name='课程封面')
     course_fee = models.DecimalField(max_digits=18, decimal_places=2, verbose_name='课程费用')
     is_classic = models.BooleanField(default=False, verbose_name='是否经典')

@@ -115,3 +115,10 @@ class AddAskView(View):
             return JsonResponse({'status': 'success'})
         else:
             return JsonResponse({'status': 'fail', 'msg': '参数错误'})
+
+class OrgDetailView(View):
+    def get(self, request, id, *args, **kwargs):
+        org = CourseOrg.objects.get(id=int(id))
+        all_courses = org.courses_set.all()[:3]
+        return render(request, 'org-detail-homepage.html',
+                      {'org': org, 'all_courses': all_courses})

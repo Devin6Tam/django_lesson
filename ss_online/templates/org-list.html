@@ -128,6 +128,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="right companyright">
                 <div class="head">我要学习</div>
                 <form class="rightform" id="jsStayForm">
@@ -167,7 +168,7 @@
 {% endblock %}
 
 {% block custom_js %}
-    <script>
+    <script type="text/javascript">
         $(function () {
             $(document).ready(function () {
                 $('#jsStayBtn').on('click', function () {
@@ -196,5 +197,4 @@
         })
 
     </script>
-
 {% endblock %}
