@@ -7,6 +7,9 @@ from django.shortcuts import render_to_response
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from .models import CourseOrg, Citys
 from .forms import AddAskForm
+from apps.operation.models import UserFavorite
+
+
 # Create your views here.
 
 class OrgListView(View):
@@ -91,7 +94,7 @@ class OrgListView(View):
             page = request.GET.get('page', 1)
         except PageNotAnInteger:
             page = 1
-        p = Paginator(orgs, request=request, per_page=10)
+        p = Paginator(orgs, request=request, per_page=5)
         orgs = p.page(page)
         context = {'orgs': orgs,
                    'orgs_rank': orgs_rank,
@@ -100,9 +103,10 @@ class OrgListView(View):
                    'ct': ct,
                    'citys': citys,
                    'city_id': city_id
-        }
+                   }
 
         return render(request, 'org-list.html', context)
+
 
 class AddAskView(View):
     def post(self, request, *args, **kwargs):
@@ -116,9 +120,44 @@ class AddAskView(View):
         else:
             return JsonResponse({'status': 'fail', 'msg': '参数错误'})
 
+
 class OrgDetailView(View):
     def get(self, request, id, *args, **kwargs):
+        # 未登录显示收藏，已登录根据实际是否收藏来显示
+        user = request.user
+        if not user.is_authenticated:
+            fav_org = False
+        else:
+            user_fav_obj = UserFavorite.objects.filter(user=user, fav_id=int(id), fav_type=2)
+            if user_fav_obj:
+                fav_org = True
+            else:
+                fav_org = False
+
+        # 机构详情查看，点击数加1
         org = CourseOrg.objects.get(id=int(id))
+        org.click_num += 1
+        org.save()
+
+        # 显示机构课程前3条
         all_courses = org.courses_set.all()[:3]
+        teachers = org.teachers_set.all()[:3]
         return render(request, 'org-detail-homepage.html',
-                      {'org': org, 'all_courses': all_courses})
+                      {'org': org,
+                       'all_courses': all_courses,
+                       'teachers': teachers,
+                       'fav_org': fav_org})
+
+
+class OrgCoursesView(View):
+    def get(self, request, id, *args, **kwargs):
+        org = CourseOrg.objects.get(id=int(id))
+        courses = org.courses_set.all()
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(courses, request=request, per_page=1)
+        courses = p.page(page)
+
+        return render(request, 'org-detail-course.html', {'org': org, 'courses': courses})
