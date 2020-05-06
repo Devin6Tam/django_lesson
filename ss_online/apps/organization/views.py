@@ -1,10 +1,7 @@
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
-from apps.organization.models import CourseOrg
 from django.views import View
-from django.shortcuts import render_to_response
-from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 from .models import CourseOrg, Citys
 from .forms import AddAskForm
 from apps.operation.models import UserFavorite
