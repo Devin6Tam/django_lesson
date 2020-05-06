@@ -12,6 +12,10 @@ from apps.operation.models import UserFavorite
 
 # Create your views here.
 
+# 授课机构列表
+from ..util import page_util
+
+
 class OrgListView(View):
     """查询机构列表"""
 
@@ -19,7 +23,7 @@ class OrgListView(View):
 
         # 获取机构类型，然后进行筛选
         ct = request.GET.get('ct', '')
-        citys = Citys.objects.all()
+        citys = Citys.objects.all()[:20]
         city_id = request.GET.get('city', '')
         # 获取排序类型选择
         sort = request.GET.get('sort', '')
@@ -90,12 +94,8 @@ class OrgListView(View):
         num = len(orgs)
         # 机构排名数据较多，取头部3条，采用分片
         orgs_rank = CourseOrg.objects.order_by('-click_num')[:3]
-        try:
-            page = request.GET.get('page', 1)
-        except PageNotAnInteger:
-            page = 1
-        p = Paginator(orgs, request=request, per_page=5)
-        orgs = p.page(page)
+
+        orgs = page_util.set_page(request, orgs)
         context = {'orgs': orgs,
                    'orgs_rank': orgs_rank,
                    'num': num,
@@ -108,6 +108,7 @@ class OrgListView(View):
         return render(request, 'org-list.html', context)
 
 
+# 立即咨询
 class AddAskView(View):
     def post(self, request, *args, **kwargs):
         form = AddAskForm(request.POST)
@@ -121,19 +122,9 @@ class AddAskView(View):
             return JsonResponse({'status': 'fail', 'msg': '参数错误'})
 
 
+# 机构详情
 class OrgDetailView(View):
     def get(self, request, id, *args, **kwargs):
-        # 未登录显示收藏，已登录根据实际是否收藏来显示
-        user = request.user
-        if not user.is_authenticated:
-            fav_org = False
-        else:
-            user_fav_obj = UserFavorite.objects.filter(user=user, fav_id=int(id), fav_type=2)
-            if user_fav_obj:
-                fav_org = True
-            else:
-                fav_org = False
-
         # 机构详情查看，点击数加1
         org = CourseOrg.objects.get(id=int(id))
         org.click_num += 1
@@ -141,23 +132,75 @@ class OrgDetailView(View):
 
         # 显示机构课程前3条
         all_courses = org.courses_set.all()[:3]
-        teachers = org.teachers_set.all()[:3]
-        return render(request, 'org-detail-homepage.html',
-                      {'org': org,
-                       'all_courses': all_courses,
-                       'teachers': teachers,
-                       'fav_org': fav_org})
+        # 显示机构讲师前2条
+        teachers = org.teachers_set.all()[:2]
+
+        context = set_common_resposne(request, id, org, 2)
+        context['all_courses'] = all_courses
+        context['teachers'] = teachers
+        return render(request, 'org-detail-homepage.html', context)
 
 
+# 机构课程
 class OrgCoursesView(View):
     def get(self, request, id, *args, **kwargs):
+        # 机构课程列表
         org = CourseOrg.objects.get(id=int(id))
         courses = org.courses_set.all()
-        try:
-            page = request.GET.get('page', 1)
-        except PageNotAnInteger:
-            page = 1
-        p = Paginator(courses, request=request, per_page=1)
-        courses = p.page(page)
+        courses = page_util.set_page(request, courses)
 
-        return render(request, 'org-detail-course.html', {'org': org, 'courses': courses})
+        context = set_common_resposne(request, id, org, 1, 'courses')
+        context['courses'] = courses
+        return render(request, 'org-detail-course.html', context)
+
+
+# 机构简介
+class OrgDescView(View):
+    def get(self, request, id, *args, **kwargs):
+        # 机构简介
+        org = CourseOrg.objects.get(id=int(id))
+        context = set_common_resposne(request, id, org, 2, 'desc')
+        return render(request, 'org-detail-desc.html', context)
+
+
+# 机构讲师
+class OrgTeachersView(View):
+    def get(self, request, id, *args, **kwargs):
+        org = CourseOrg.objects.get(id=int(id))
+        teachers = org.teachers_set.all()
+        teachers = page_util.set_page(request, teachers)
+
+        context = set_common_resposne(request, id, org, 3, 'teachers')
+        context['teachers'] = teachers
+
+        return render(request, 'org-detail-teachers.html', context)
+
+
+# 获取收藏标志
+def is_fav(request, id, fav_type):
+    # 未登录显示收藏，已登录根据实际是否收藏来显示
+    user = request.user
+    if not user.is_authenticated:
+        fav_flag = False
+    else:
+        user_fav_obj = UserFavorite.objects.filter(user=user, fav_id=int(id), fav_type=fav_type)
+        if user_fav_obj:
+            fav_flag = True
+        else:
+            fav_flag = False
+    return fav_flag
+
+
+# 设置公共返回信息
+# org 机构信息
+# fav_flag 收藏标志
+# fav_type 收藏类型
+# choice 选择
+def set_common_resposne(request, id, org, fav_type, choice='home'):
+    context = {
+        'org': org,
+        'fav_flag': is_fav(request, id, fav_type),
+        'fav_type': fav_type,
+        'choice': choice
+    }
+    return context

@@ -25,15 +25,28 @@ import xadmin
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
+    # 后台管理平台
     path(r'xadmin/', xadmin.site.urls),
+    # 网站首页
     path(r'', TemplateView.as_view(template_name='index.html'), name="index"),
+    # （密码）登录
     path(r'login/', UserLoginView.as_view(), name='login'),
+    # 发送短信
     path(r'send_sms/', SendSmsView.as_view(), name='send_sms'),
+    # 短信验证码登录
     path(r'sms_login/', UserSmsLoginView.as_view(), name='sms_login'),
+    # 注册
     path('register/', RegisterView.as_view(), name='register'),
+    # 退出
     path(r'logout/', UserLogoutView.as_view(), name='logout'),
+    # 图形验证码
     path(r'captcha/', include('captcha.urls')),
+    # 机构
     path(r'org/', include(('apps.organization.urls', 'organization'), namespace='org')),
+    # 课程
+    path(r'course/', include(('apps.course.urls', 'course'), namespace='course')),
+    # 用户操作
     path(r'op/', include(('apps.operation.urls', 'operation'), namespace='op')),
+    # 媒体文件
     url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT})
 ]
