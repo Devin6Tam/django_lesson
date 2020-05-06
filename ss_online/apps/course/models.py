@@ -1,7 +1,10 @@
 from django.db import models
 from apps.user.models import BaseModel
 from apps.organization.models import Teachers, CourseOrg
+
+
 # Create your models here.
+
 
 # 课程表
 class Courses(BaseModel):
@@ -30,6 +33,20 @@ class Courses(BaseModel):
     def __str__(self):
         return self.name
 
+    def lesson_nums(self):
+        return self.lessons_set.all().count()
+
+
+# 课程标签
+class CourseTags(BaseModel):
+    course = models.ForeignKey(Courses, on_delete=models.CASCADE, verbose_name='课程')
+    tag = models.CharField(max_length=20, verbose_name='课程标签')
+
+    class Meta:
+        verbose_name = '课程标签'
+        verbose_name_plural = verbose_name
+
+
 # 课程章节
 class Lessons(BaseModel):
     course = models.ForeignKey(Courses, on_delete=models.CASCADE, verbose_name="课程名称")
@@ -42,6 +59,7 @@ class Lessons(BaseModel):
 
     def __str__(self):
         return self.name
+
 
 # 学习视频
 class Videos(BaseModel):
@@ -56,6 +74,7 @@ class Videos(BaseModel):
 
     def __str__(self):
         return self.name
+
 
 # 课程资源信息（资源下载地址）
 class CourseSource(BaseModel):

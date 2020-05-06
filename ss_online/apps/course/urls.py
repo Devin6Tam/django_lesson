@@ -4,10 +4,12 @@
 # @Author  : tanxw
 # @Desc    : 子app 路由信息
 from django.urls import path
-from .views import CourseListView
+from .views import CourseListView, CourseDetailView
 from django.conf.urls import url
 
 urlpatterns = [
-    # 机构列表
+    # 课程列表
     path(r'list/', CourseListView.as_view(), name='list'),
+    # 课程详情
+    path(r'<int:course_id>/detail/', CourseDetailView.as_view(), name='detail'),
 ]

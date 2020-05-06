@@ -4,7 +4,7 @@
 # @Author  : tanxw
 # @Desc    : 子app 路由信息
 from django.urls import path
-from .views import OrgListView, AddAskView, OrgDetailView, OrgCoursesView, OrgDescView, OrgTeachersView
+from .views import OrgListView, AddAskView, OrgDetailView, OrgCoursesView, OrgDescView, OrgTeachersView, TeachersListView, TeachersDetailView
 from django.conf.urls import url
 
 urlpatterns = [
@@ -21,4 +21,8 @@ urlpatterns = [
     path(r'<int:id>/desc/', OrgDescView.as_view(), name='desc'),
     # 机构老师
     path(r'<int:id>/teachers/', OrgTeachersView.as_view(), name='teachers'),
+    # 讲师列表
+    path(r'teachers/list', TeachersListView.as_view(), name='teachers_list'),
+    # 讲师详情
+    path(r'teachers/<int:id>/detail', TeachersDetailView.as_view(), name='teachers_detail'),
 ]

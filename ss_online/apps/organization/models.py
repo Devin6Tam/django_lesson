@@ -16,6 +16,7 @@ class Citys(BaseModel):
         return self.name
 
 
+# 机构
 class CourseOrg(BaseModel):
     name = models.CharField(max_length=50, verbose_name='机构名称')
     desc = models.TextField(verbose_name='课程简介')
@@ -26,7 +27,7 @@ class CourseOrg(BaseModel):
     click_num = models.IntegerField(default=0, verbose_name='点击人数')
     address = models.CharField(max_length=300, verbose_name='机构地址', default='')
     students = models.IntegerField(default=0, verbose_name='学生人数')
-    image = models.ImageField(upload_to='teacher/%Y/%m', verbose_name='机构logo')
+    image = models.ImageField(upload_to='org/%Y/%m', verbose_name='机构logo')
     course_num = models.IntegerField(default=0, verbose_name='课程数')
     city = models.ForeignKey(Citys, verbose_name='所在城市', on_delete=models.CASCADE)
     is_auth = models.BooleanField(default=False, verbose_name='是否认证')
@@ -43,7 +44,16 @@ class CourseOrg(BaseModel):
     def __str__(self):
         return self.name
 
+    # 机构课程数
+    def course_nums(self):
+        return self.courses_set.all().count()
 
+    # 机构讲师人数
+    def teacher_nums(self):
+        return self.teachers_set.all().count()
+
+
+# 机构讲师
 class Teachers(BaseModel):
     org = models.ForeignKey(CourseOrg, on_delete=models.CASCADE, verbose_name='所在机构')
     name = models.CharField(max_length=50, verbose_name='讲师名称')
@@ -54,7 +64,7 @@ class Teachers(BaseModel):
     points = models.CharField(max_length=50, verbose_name='教学特点')
     fav_num = models.IntegerField(default=0, verbose_name='收藏人数')
     click_num = models.IntegerField(default=0, verbose_name='点击人数')
-    image = models.ImageField(upload_to='org/%Y/%m', verbose_name='头像')
+    image = models.ImageField(upload_to='teacher/%Y/%m', verbose_name='头像')
 
     class Meta:
         verbose_name = '讲师信息表'

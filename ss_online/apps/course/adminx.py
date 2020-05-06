@@ -5,8 +5,9 @@
 import import_export
 
 import xadmin
-from .models import Courses, Lessons, Videos, CourseSource
+from .models import Courses, Lessons, Videos, CourseSource, CourseTags
 from .resources import CourseResource
+
 
 class CourseAdmin(object):
     # 列表页显示字段
@@ -22,6 +23,19 @@ class CourseAdmin(object):
 
     import_export_args = {'import_resource_class': CourseSource, 'export_resource_class': CourseSource}
 
+
+# 课程标签菜单
+class CourseTagsAdmin(object):
+    # 列表页显示字段
+    list_display = ['course', 'tag']
+    # 支持搜索的字段
+    search_fields = ['course', 'tag']
+    # 过滤筛选的字段
+    list_filter = ['course', 'tag']
+    # 分页
+    list_per_page = 10
+
+
 class LessonAdmin(object):
     # 列表页显示字段
     list_display = ['course', 'name', 'learn_time']
@@ -33,6 +47,7 @@ class LessonAdmin(object):
     list_editable = ['name']
     # 分页
     list_per_page = 10
+
 
 class VideoAdmin(object):
     # 列表页显示字段
@@ -46,6 +61,7 @@ class VideoAdmin(object):
     # 分页
     list_per_page = 10
 
+
 class CourseSourceAdmin(object):
     # 列表页显示字段
     list_display = ['course', 'name', 'file']
@@ -58,7 +74,9 @@ class CourseSourceAdmin(object):
     # 分页
     list_per_page = 10
 
+
 xadmin.site.register(Courses, CourseAdmin)
+xadmin.site.register(CourseTags, CourseTagsAdmin)
 xadmin.site.register(Lessons, LessonAdmin)
 xadmin.site.register(Videos, VideoAdmin)
 xadmin.site.register(CourseSource, CourseSourceAdmin)

@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
-from .models import CourseOrg, Citys
+from .models import CourseOrg, Citys, Teachers
 from .forms import AddAskForm
 from apps.operation.models import UserFavorite
 
@@ -11,6 +11,7 @@ from apps.operation.models import UserFavorite
 
 # 授课机构列表
 from ..util import page_util
+from ..util.page_util import is_fav
 
 
 class OrgListView(View):
@@ -173,19 +174,28 @@ class OrgTeachersView(View):
         return render(request, 'org-detail-teachers.html', context)
 
 
-# 获取收藏标志
-def is_fav(request, id, fav_type):
-    # 未登录显示收藏，已登录根据实际是否收藏来显示
-    user = request.user
-    if not user.is_authenticated:
-        fav_flag = False
-    else:
-        user_fav_obj = UserFavorite.objects.filter(user=user, fav_id=int(id), fav_type=fav_type)
-        if user_fav_obj:
-            fav_flag = True
-        else:
-            fav_flag = False
-    return fav_flag
+class TeachersListView(View):
+    def get(self, request, *args, **kwargs):
+        # 获取排序类型选择
+        sort = request.GET.get('sort', '')
+
+        all_teachers = Teachers.objects.order_by(f'-{page_util.get_order_by(sort)}')
+        all_teachers = page_util.set_page(request, all_teachers)
+
+        return render(request, 'teachers-list.html', {'all_teachers': all_teachers, 'sort': sort})
+
+
+class TeachersDetailView(View):
+    def get(self, request, id, *args, **kwargs):
+        teacher = Teachers.objects.get(id=int(id))
+
+        # 课程、机构收藏标识获取
+        teacher_fav_flag = page_util.is_fav(request, teacher.id, 1)
+        org_fav_flag = page_util.is_fav(request, teacher.org.id, 2)
+        return render(request, 'teacher-detail.html',
+                      {'teacher': teacher,
+                       'teacher_fav_flag': teacher_fav_flag,
+                       'org_fav_flag': org_fav_flag})
 
 
 # 设置公共返回信息
