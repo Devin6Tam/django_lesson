@@ -25,6 +25,7 @@ class Courses(BaseModel):
     image = models.ImageField(upload_to='courses/%Y/%m', verbose_name='课程封面')
     course_fee = models.DecimalField(max_digits=18, decimal_places=2, verbose_name='课程费用')
     is_classic = models.BooleanField(default=False, verbose_name='是否经典')
+    notices = models.CharField(max_length=300, default='', verbose_name='课程公告')
 
     class Meta:
         verbose_name = '课程信息'

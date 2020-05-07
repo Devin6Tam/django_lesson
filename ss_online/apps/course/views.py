@@ -1,5 +1,6 @@
 import random
 
+from django.http import JsonResponse
 from django.shortcuts import render
 
 # Create your views here.
@@ -70,3 +71,43 @@ class CourseDetailView(View):
                        'related_course': related_course,
                        'course_fav_flag': course_fav_flag,
                        'org_fav_flag': org_fav_flag})
+
+# 查看课程章节信息
+class CourseLessonsView(View):
+    def get(self, request, course_id, *args, **kwargs):
+
+        course = Courses.objects.get(id=int(course_id))
+
+        user_courses = UserCourse.objects.filter(user=request.user).exclude(course=course)
+        if len(user_courses) > 5:
+            user_courses = user_courses[:5]
+
+        related_courses = list(set([user_course.course for user_course in user_courses]))
+
+        return render(request, 'course-video.html', {'course': course, 'related_courses': related_courses, 'choice': 'video'})
+
+
+# 查看课程评论
+class CourseCommentsView(View):
+    def get(self, request, course_id, *args, **kwargs):
+        course = Courses.objects.get(id=int(course_id))
+
+        user_courses = UserCourse.objects.filter(user=request.user).exclude(course=course)
+        if len(user_courses) > 5:
+            user_courses = user_courses[:5]
+
+        all_comments = course.coursecomments_set.all()
+        all_comments = page_util.set_page(request, all_comments)
+        related_courses = list(set([user_course.course for user_course in user_courses]))
+        return render(request, 'course-comment.html',
+                      {'course': course,
+                       'all_comments': all_comments,
+                       'related_courses': related_courses,
+                       'choice': 'comment'})
+
+
+# 添加评论
+class CourseAddCommentView(View):
+    def post(self, request, course_id, *args, **kwargs):
+
+        return JsonResponse({'status': 'success'})

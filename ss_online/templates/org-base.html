@@ -35,12 +35,12 @@
                                 <dd>{{ request.user }}<img class="down fr" src="{% static 'images/top_down.png' %}"/>
                                 </dd>
                                 <dt><img width="20" height="20"
-                                         src="{% static 'media/image/2019/12/default_big_14.png' %}"/></dt>
+                                         src="{{ request.user.image.url }}"/></dt>
                             </dl>
                             <div class="userdetail">
                                 <dl>
                                     <dt><img width="80" height="80"
-                                             src="{% static 'media/image/2019/12/default_big_14.png' %}"/></dt>
+                                             src="{{ request.user.image.url }}"/></dt>
                                     <dd>
                                         <h2>django</h2>
                                         <p>{{ request.user }}</p>
