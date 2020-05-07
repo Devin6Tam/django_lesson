@@ -65,6 +65,7 @@ class Teachers(BaseModel):
     fav_num = models.IntegerField(default=0, verbose_name='收藏人数')
     click_num = models.IntegerField(default=0, verbose_name='点击人数')
     image = models.ImageField(upload_to='teacher/%Y/%m', verbose_name='头像')
+    is_gold = models.BooleanField(default=False, verbose_name='是否金牌')
 
     class Meta:
         verbose_name = '讲师信息表'

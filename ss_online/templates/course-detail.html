@@ -141,7 +141,7 @@
                 <div class="right layout">
                     <div class="head">相关课程推荐</div>
                     <div class="group_recommend">
-
+                        {% if related_course %}
                         <dl>
                             <dt>
                                 <a target="_blank" href="">
@@ -154,6 +154,7 @@
                                 <span class="fl">学习时长：<i class="key">{{ related_course.learn_time }}</i></span>
                             </dd>
                         </dl>
+                        {% endif %}
 
 
                     </div>

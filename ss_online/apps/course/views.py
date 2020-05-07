@@ -56,8 +56,10 @@ class CourseDetailView(View):
         #  使用set去重
         related_courses = list(set([related_course_id.course for related_course_id in related_course_ids]))
         #  在相关的课程列表中随机的取出一个课程
-        related_course = random.choice(related_courses)
-
+        if len(related_courses) > 1:
+            related_course = random.choice(related_courses)
+        else:
+            related_course = None
         # 课程、机构收藏标识获取
         course_fav_flag = page_util.is_fav(request, course.id, 1)
         org_fav_flag = page_util.is_fav(request, course.course_org.id, 2)

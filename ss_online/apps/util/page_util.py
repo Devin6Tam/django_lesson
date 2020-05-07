@@ -57,3 +57,13 @@ def get_order_by(sort):
         return 'students'
     else:
         return 'add_time'
+
+
+# 获取排序字段
+def get_org_order_by(sort):
+    if sort == 'courses':
+        return 'course_num'
+    elif sort == 'students':
+        return 'students'
+    else:
+        return 'add_time'

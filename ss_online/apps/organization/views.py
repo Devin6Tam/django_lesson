@@ -46,10 +46,7 @@ class OrgListView(View):
             con.children.append(('city_id', city_id))
 
         # F传参方式
-        if sort:
-            orgs = CourseOrg.objects.filter(con).order_by(f'{sort}')
-        else:
-            orgs = CourseOrg.objects.filter(con)
+        orgs = CourseOrg.objects.filter(con).order_by(f'-{page_util.get_org_order_by(sort)}')
 
         # 第三种方式 条件判断嵌套比较复杂，可以省略
         # if sort == 'students':
@@ -182,18 +179,31 @@ class TeachersListView(View):
         all_teachers = Teachers.objects.order_by(f'-{page_util.get_order_by(sort)}')
         all_teachers = page_util.set_page(request, all_teachers)
 
-        return render(request, 'teachers-list.html', {'all_teachers': all_teachers, 'sort': sort})
+        teachers_rank = Teachers.objects.order_by(f'-{page_util.get_order_by("hot")}')
+        return render(request, 'teachers-list.html',
+                      {'all_teachers': all_teachers,
+                       'teachers_rank': teachers_rank,
+                       'sort': sort})
 
 
 class TeachersDetailView(View):
     def get(self, request, id, *args, **kwargs):
         teacher = Teachers.objects.get(id=int(id))
 
+        # 该讲师下所有课程
+        all_courses = teacher.courses_set.order_by(f'-{page_util.get_order_by("")}')
+        all_courses = page_util.set_page(request, all_courses)
+
+        # 讲师排行榜
+        teachers_rank = Teachers.objects.order_by(f'-{page_util.get_order_by("hot")}')
+
         # 课程、机构收藏标识获取
         teacher_fav_flag = page_util.is_fav(request, teacher.id, 1)
         org_fav_flag = page_util.is_fav(request, teacher.org.id, 2)
         return render(request, 'teacher-detail.html',
                       {'teacher': teacher,
+                       'all_courses': all_courses,
+                       'teachers_rank': teachers_rank,
                        'teacher_fav_flag': teacher_fav_flag,
                        'org_fav_flag': org_fav_flag})
 
