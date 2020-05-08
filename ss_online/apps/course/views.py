@@ -27,7 +27,7 @@ class CourseListView(View):
         # 热门课程
         hot_courses = Courses.objects.order_by(f'-{page_util.get_order_by("hot")}')[:1]
 
-        return render(request, 'course-list.html',
+        return render(request, 'course/course-list.html',
                       {'all_courses': courses,
                        'hot_courses': hot_courses,
                        'sort': sort})
@@ -66,7 +66,7 @@ class CourseDetailView(View):
         course_fav_flag = page_util.is_fav(request, course.id, 1)
         org_fav_flag = page_util.is_fav(request, course.course_org.id, 2)
 
-        return render(request, 'course-detail.html',
+        return render(request, 'course/course-detail.html',
                       {'course': course,
                        'students': students,
                        'related_course': related_course,
@@ -130,6 +130,7 @@ class CourseCommentsPlayView(LoginRequiredMixin, View):
 """
 
 class CourseLessonCommentView(LoginRequiredMixin, View):
+    login_url = '/login/'
     def get(self, request, course_id, *args, **kwargs):
 
         course = Courses.objects.get(id=int(course_id))
@@ -139,10 +140,11 @@ class CourseLessonCommentView(LoginRequiredMixin, View):
 
         context = lesson_common(course, 'lesson')
         context['all_comments'] = all_comments
-        return render(request, 'course-lesson.html', context)
+        return render(request, 'course/course-lesson.html', context)
 
 
 class CoursePlayCommentsView(LoginRequiredMixin, View):
+    login_url = '/login/'
     def get(self, request, course_id, lesson_id, video_id, *args, **kwargs):
 
         course = Courses.objects.get(id=int(course_id))
@@ -156,7 +158,7 @@ class CoursePlayCommentsView(LoginRequiredMixin, View):
         context['lesson'] = lesson
         context['video'] = video
         context['all_comments'] = all_comments
-        return render(request, 'course-play.html', context)
+        return render(request, 'course/course-play.html', context)
 
 
 # 课程章节公共模块

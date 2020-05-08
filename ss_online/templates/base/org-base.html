@@ -43,11 +43,12 @@
                                              src="{{ request.user.image.url }}"/></dt>
                                     <dd>
                                         <h2>django</h2>
-                                        <p>{{ request.user }}</p>
+                                        <p>{% if request.user.nick_name %}{{ request.user.nick_name }}{% else %}
+                                        {{ request.user.username }}{% endif %}</p>
                                     </dd>
                                 </dl>
                                 <div class="btn">
-                                    <a class="personcenter fl" href="usercenter-info.html">进入个人中心</a>
+                                    <a class="personcenter fl" href="{% url 'user:home' %}">进入个人中心</a>
                                     <a class="fr" href="{% url 'logout' %}">退出</a>
                                 </div>
                             </div>

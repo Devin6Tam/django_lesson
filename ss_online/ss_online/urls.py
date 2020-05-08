@@ -47,6 +47,8 @@ urlpatterns = [
     path(r'course/', include(('apps.course.urls', 'course'), namespace='course')),
     # 用户操作
     path(r'op/', include(('apps.operation.urls', 'operation'), namespace='op')),
+    # 用户操作
+    path(r'user/', include(('apps.user.urls', 'user'), namespace='user')),
     # 媒体文件
     url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT})
 ]

@@ -1,8 +1,8 @@
-{% extends 'lessons-base2.html' %}
+{% extends 'course/../base/lessons-base2.html' %}
 {% load staticfiles %}
 
 {% block title %}
-    课程评论 - 六星在线网
+    章节信息 - 六星在线网
 {% endblock %}
 
 {% block head %}
@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/mooc.css' %}"/>
 {% endblock %}
 
-{#{% block four_postion %}{% endblock %}#}
+{% block four_postion %}章节信息{% endblock %}
 
 
 {% block course_info %}

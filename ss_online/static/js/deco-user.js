@@ -12,7 +12,7 @@ function sendCodeChangeEmail($btn){
         cache: false,
         type: "get",
         dataType:'json',
-        url:"/users/sendemail_code/",
+        url:"/user/sendemail_code/",
         data:$('#jsChangeEmailForm').serialize(),
         async: true,
         beforeSend:function(XMLHttpRequest){
@@ -50,7 +50,7 @@ var verify = verifyDialogSubmit(
         cache: false,
         type: 'post',
         dataType:'json',
-        url:"/users/update_email/ ",
+        url:"/user/update_email/ ",
         data:$('#jsChangeEmailForm').serialize(),
         async: true,
         beforeSend:function(XMLHttpRequest){
@@ -90,11 +90,12 @@ function changePhoneSubmit($btn){
         cache: false,
         type: 'post',
         dataType:'json',
-        url:"/users/update/mobile/",
+        url:"/user/update_mobile/",
         data:$('#jsChangePhoneForm').serialize(),
         beforeSend:function(XMLHttpRequest){
             $btn.val("发送中...");
             $btn.attr('disabled',true);
+            XMLHttpRequest.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
             Dml.fun.showErrorTips($('#jsChangePhoneTips'), "验证中...");
         },
         success: function(data) {
@@ -141,11 +142,11 @@ function sendCodeChangePhone($btn){
                 mobile:$("#jsChangePhone").val(),
                 captcha_1:$("#id_captcha_1").val(),
                 captcha_0:$('#id_captcha_0').val(),
-                csrfmiddlewaretoken: '{% csrf_token %}',
         },
         beforeSend:function(XMLHttpRequest){
             $btn.val("发送中...");
             $btn.attr('disabled',true);
+            XMLHttpRequest.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
         },
         success: function(data){
             if(data.mobile){
@@ -176,9 +177,12 @@ $(function(){
             cache: false,
             type: "POST",
             dataType:'json',
-            url:"/users/update/pwd/",
+            url:"/user/update_pwd/",
             data:$('#jsResetPwdForm').serialize(),
             async: true,
+            beforeSend:function(XMLHttpRequest){
+                XMLHttpRequest.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            },
             success: function(data) {
                 if(data.password1){
                     Dml.fun.showValidateError($("#pwd"), data.password1);
@@ -253,16 +257,18 @@ $(function(){
         if(!verify){
            return;
         }
+
         $.ajax({
             cache: false,
             type: 'post',
             dataType:'json',
-            url:"/users/info/",
+            url:"/user/update_info/",
             data:$jsEditUserForm.serialize(),
             async: true,
             beforeSend:function(XMLHttpRequest){
                 _self.val("保存中...");
                 _self.attr('disabled',true);
+                XMLHttpRequest.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
             },
             success: function(data) {
                 if(data.nick_name){

@@ -1,0 +1,107 @@
+{% extends 'base/user-base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    我的收藏 - 公开课 - 六星在线网
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'user:home' %}">个人中心</a>></li>
+                <li>我的课程</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <div class="wp list personal_list">
+            <div class="left">
+                <ul>
+                    <li class="{% ifequal request.path|slice:10 '/user/home' %}active2{% endifequal %}"><a
+                            href="{% url 'user:home' %}">个人资料</a></li>
+                    <li class="{% ifequal request.path|slice:12 '/user/course' %}active2{% endifequal %}"><a
+                            href="{% url 'user:course' %}">我的课程</a></li>
+                    <li class="{% ifequal request.path|slice:14 '/user/favorite' %}active2{% endifequal %}"><a
+                            href="{% url 'user:favorite' 1 %}">我的收藏</a></li>
+                    <li class="{% ifequal request.path|slice:13 '/user/message' %}active2{% endifequal %}"><a
+                            href="{% url 'user:message' %}" style="position: relative;">我的消息</a></li>
+                </ul>
+            </div>
+
+
+            <div class="right">
+                <div class="personal_des Releasecont">
+                    <div class="head">
+                        <h1>我的收藏</h1>
+                    </div>
+                </div>
+                <div class="personal_des permessage">
+                    <div class="head">
+                        <ul class="tab_header messagehead">
+                            <li class="{% if fav_type == 2 %}active{% endif %}"><a
+                                    href="{% url 'user:favorite' 2 %}">课程机构</a></li>
+                            <li class="{% if fav_type == 3 %}active{% endif %}"><a
+                                    href="{% url 'user:favorite' 3 %}">授课教师 </a></li>
+                            <li class="{% if fav_type == 1 %}active{% endif %}"><a
+                                    href="{% url 'user:favorite' 1 %}">公开课程</a></li>
+                        </ul>
+
+                    </div>
+                    <div class="companycenter">
+                        <div class="group_list brief">
+                            {% for course in all_courses %}
+                                <div class="module1_5 box">
+                                <a href="{% url 'course:detail' course.id %}">
+                                    <img width="214" height="190"
+                                         src="{{ course.image.url }}"/>
+                                </a>
+                                <div class="des">
+                                    <a href="{% url 'course:detail' course.id %}"><h2>{{ course.name }}</h2></a>
+                                    <span class="fl">时长：<i class="key">{{ course.learn_time }}</i></span>
+                                    <span class="fr">学习人数：{{ course.students }}</span>
+                                </div>
+                                <div class="bottom">
+                                    <span class="fl">{{ course.course_org.name }}</span>
+                                    <span class="delete-group fr jsDeleteFav_course" data-favid="{{ course.id }}"></span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $('.jsDeleteFav_course').on('click', function () {
+        var _this = $(this),
+            favid = _this.attr('data-favid');
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "{% url 'op:add_fav' %}",
+            data: {
+                fav_type: 1,
+                fav_id: favid,
+            },
+            async: true,
+            beforeSend: function (XMLHttpRequest) {
+                XMLHttpRequest.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            },
+            success: function (data) {
+                alert(favid)
+                Dml.fun.winReload();
+            }
+        });
+    });
+</script>
+{% endblock %}

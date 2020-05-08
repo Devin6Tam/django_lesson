@@ -5,6 +5,8 @@ import redis
 from django.contrib.auth import get_user_model
 
 UserProfile = get_user_model()
+
+
 class LoginForm(forms.Form):
     #  需要校验的字段，一定要跟前端中的name属性对应
     username = forms.CharField(required=True, min_length=3, max_length=30)
@@ -18,6 +20,8 @@ class DynamicLoginForm(forms.Form):
 
 
 """登录，注册都将会用到这些重复的属性，方法，所以做成基础类，便于简洁代码"""
+
+
 class BaseUserForm(forms.Form):
     mobile = forms.CharField(max_length=11, min_length=11, required=True)
     code = forms.CharField(max_length=6, min_length=6, required=True)
@@ -43,6 +47,7 @@ class SmsCodeForm(BaseUserForm):
     """用户使用动态登录的时候，进行数据校验，在redis 获取验证码"""
     pass
 
+
 class RegisterForm(BaseUserForm):
     """用户注册的时候，进行数据校验，在redis 获取验证码；校验手机号是否已存在"""
     password = forms.CharField(max_length=20, min_length=6, required=True)
@@ -53,3 +58,25 @@ class RegisterForm(BaseUserForm):
         if user:
             raise forms.ValidationError('手机号已经存在')
         return mobile
+
+
+class UpdateInfoForm(forms.ModelForm):
+    """更新用户信息"""
+
+    class Meta:
+        model = UserProfile
+        fields = ['nick_name', 'birthday', 'gender', 'address']
+
+
+class UpdatePwdForm(forms.Form):
+    """更新用户密码"""
+    password1 = forms.CharField(required=True, min_length=6)
+    password2 = forms.CharField(required=True, min_length=6)
+
+
+class ImageUploadForm(forms.ModelForm):
+    """用户头像上传"""
+
+    class Meta:
+        model = UserProfile
+        fields = ['image']

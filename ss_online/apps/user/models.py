@@ -1,12 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
+
+
 # Create your models here.
 
 class BaseModel(models.Model):
     add_time = models.DateTimeField(default=datetime.datetime.now, verbose_name='创建时间')
+
     class Meta:
         abstract = True
+
 
 class UserProfile(AbstractUser):
     GENDER_CHOICES = (

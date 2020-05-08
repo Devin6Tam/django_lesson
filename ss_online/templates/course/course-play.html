@@ -1,4 +1,4 @@
-{% extends 'lessons-base2.html' %}
+{% extends 'base/lessons-base2.html' %}
 {% load staticfiles %}
 
 {% block title %}
@@ -26,12 +26,11 @@
     </style>
 {% endblock %}
 
-{% block three_postion %}{{ lesson.name }}{% endblock %}
-{% block four_postion %}{{ video.name }}{% endblock %}
+{% block four_postion %}视频播放{% endblock %}
 
 {% block video_play %}
-     <div style="width:1200px;height:675px; margin-left: 340px">
-        <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="1200"
+     <div style="width:1200px;height:800px; margin-left: 340px">
+        <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="1200px" height="800px"
               poster="http://video-js.zencoder.com/oceans-clip.png"
               data-setup="{}">
             <source src="{{ video.url }}" type='video/mp4'>

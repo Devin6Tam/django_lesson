@@ -9,11 +9,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <style>
-        .tab_select_display {
-            display: none;
-        }
-    </style>
+
     <script src="{% static 'js/jquery.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/jquery-migrate-1.2.1.min.js' %}" type="text/javascript"></script>
     {% block head %}
@@ -46,11 +42,12 @@
                                              src="{{ request.user.image.url }}"/></dt>
                                     <dd>
                                         <h2>hello,</h2>
-                                        <p>{{ request.user }}</p>
+                                        <p>{% if request.user.nick_name %}{{ request.user.nick_name }}{% else %}
+                                        {{ request.user.username }}{% endif %}</p>
                                     </dd>
                                 </dl>
                                 <div class="btn">
-                                    <a class="personcenter fl" href="usercenter-info.html">进入个人中心</a>
+                                    <a class="personcenter fl" href="{% url 'user:home' %}">进入个人中心</a>
                                     <a class="fr" href="{% url 'logout' %}">退出</a>
                                 </div>
                             </div>
@@ -111,9 +108,8 @@
             <ul>
                 <li><a href="{% url 'index' %}">首页</a>></li>
                 <li><a href="{% url 'course:list' %}">公开课程</a>></li>
-                <li>视频播放</li>
-{#                <li><a href="{% url 'course:detail' course.id %}">{% block three_postion %}课程详情{% endblock %}</a>></li>#}
-{#                <li>{% block four_postion %}{% endblock %}</li>#}
+                <li><a href="{% url 'course:detail' course.id %}">{% block three_postion %}课程详情{% endblock %}</a>></li>
+                <li>{% block four_postion %}{% endblock %}</li>
             </ul>
         </div>
     </div>
@@ -137,10 +133,15 @@
                 <div class="content">
                     <div class="mod-tab-menu">
                         <ul class="course-menu clearfix">
-                            <li><a class="active" id="learnOn" href="javascript:void(0)" onclick="tab_select('{{ choice }}', 1)"><span>章节</span></a></li>
-                            <li><a id="commentOn" class="ui-tabs-active" href="javascript:void(0)" onclick="tab_select('{{ choice }}', 2)"><span>评论</span></a></li>
+                            {% if choice == 'video' or choice == 'comment' %}
+                                <li><a class="{% ifequal choice 'video' %}active{% else %}ui-tabs-active{% endifequal %}" id="learnOn" href="{% url 'course:lesson_list' course.id %}"><span>章节</span></a></li>
+                                <li><a id="commentOn" class="{% ifequal choice 'comment' %}active{% else %}ui-tabs-active{% endifequal %}" href="{% url 'course:comment_list' course.id %}"><span>评论</span></a></li>
+                            {% endif %}
+                            {% if choice == 'play_video' or choice == 'play_comment' %}
+                                <li><a class="{% ifequal choice 'play_video' %}active{% else %}ui-tabs-active{% endifequal %}" id="learnOn" href="{% url 'course:video_lesson' course.id lesson.id video.id %}"><span>章节</span></a></li>
+                                <li><a id="commentOn" class="{% ifequal choice 'play_comment' %}active{% else %}ui-tabs-active{% endifequal %}" href="{% url 'course:video_comment' course.id lesson.id video.id %}"><span>评论</span></a></li>
+                            {% endif %}
                         </ul>
-                        <input id="tab_sort_num" type="hidden" value="1">
                     </div>
 
                     {% block content %}{% endblock %}
@@ -269,44 +270,6 @@
 <script src="{% static 'js/plugins/queryCity/js/public.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/unslider.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/plugins/jquery.scrollLoading.js' %}" type="text/javascript"></script>
-<script type="text/javascript">
-    function tab_select(page,tab_num) {
-        if(page && page == 'lesson'){
-            if(tab_num ==1){
-                $('#'+page+'_tab_'+tab_num).removeClass('tab_select_display')
-                $('#'+page+'_tab_'+(tab_num+1)).addClass('tab_select_display')
-                $('#learnOn').addClass('active')
-                $('#commentOn').removeClass('active')
-                $('#commentOn').addClass('ui-tabs-active')
-                $('#tab_sort_num').val(1)
-            } else if(tab_num ==2){
-                $('#'+page+'_tab_'+(tab_num-1)).addClass('tab_select_display')
-                $('#'+page+'_tab_'+tab_num).removeClass('tab_select_display')
-                $('#commentOn').addClass('active')
-                $('#learnOn').removeClass('active')
-                $('#learnOn').addClass('ui-tabs-active')
-                $('#tab_sort_num').val(2)
-            }
-        }else if(page && page == 'video'){
-            if(tab_num ==1){
-                $('#'+page+'_tab_'+tab_num).removeClass('tab_select_display')
-                $('#'+page+'_tab_'+(tab_num+1)).addClass('tab_select_display')
-                $('#learnOn').addClass('active')
-                $('#commentOn').removeClass('active')
-                $('#commentOn').addClass('ui-tabs-active')
-                $('#tab_sort_num').val(1)
-            } else if(tab_num ==2){
-                $('#'+page+'_tab_'+(tab_num-1)).addClass('tab_select_display')
-                $('#'+page+'_tab_'+tab_num).removeClass('tab_select_display')
-                $('#commentOn').addClass('active')
-                $('#learnOn').removeClass('active')
-                $('#learnOn').addClass('ui-tabs-active')
-                $('#tab_sort_num').val(2)
-            }
-        }
-    }
-</script>
-
 {% block custom_js %}
 {% endblock %}
 

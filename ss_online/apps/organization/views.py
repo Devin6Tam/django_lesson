@@ -100,7 +100,7 @@ class OrgListView(View):
                    'city_id': city_id
                    }
 
-        return render(request, 'org-list.html', context)
+        return render(request, 'org/org-list.html', context)
 
 
 # 立即咨询
@@ -133,7 +133,7 @@ class OrgDetailView(View):
         context = set_common_resposne(request, id, org, 2)
         context['all_courses'] = all_courses
         context['teachers'] = teachers
-        return render(request, 'org-detail-homepage.html', context)
+        return render(request, 'org/org-detail-homepage.html', context)
 
 
 # 机构课程
@@ -146,7 +146,7 @@ class OrgCoursesView(View):
 
         context = set_common_resposne(request, id, org, 1, 'courses')
         context['courses'] = courses
-        return render(request, 'org-detail-course.html', context)
+        return render(request, 'org/org-detail-course.html', context)
 
 
 # 机构简介
@@ -155,7 +155,7 @@ class OrgDescView(View):
         # 机构简介
         org = CourseOrg.objects.get(id=int(id))
         context = set_common_resposne(request, id, org, 2, 'desc')
-        return render(request, 'org-detail-desc.html', context)
+        return render(request, 'org/org-detail-desc.html', context)
 
 
 # 机构讲师
@@ -168,7 +168,7 @@ class OrgTeachersView(View):
         context = set_common_resposne(request, id, org, 3, 'teachers')
         context['teachers'] = teachers
 
-        return render(request, 'org-detail-teachers.html', context)
+        return render(request, 'org/org-detail-teachers.html', context)
 
 
 class TeachersListView(View):
@@ -180,7 +180,7 @@ class TeachersListView(View):
         all_teachers = page_util.set_page(request, all_teachers)
 
         teachers_rank = Teachers.objects.order_by(f'-{page_util.get_order_by("hot")}')
-        return render(request, 'teachers-list.html',
+        return render(request, 'teacher/teachers-list.html',
                       {'all_teachers': all_teachers,
                        'teachers_rank': teachers_rank,
                        'sort': sort})
@@ -200,7 +200,7 @@ class TeachersDetailView(View):
         # 课程、机构收藏标识获取
         teacher_fav_flag = page_util.is_fav(request, teacher.id, 1)
         org_fav_flag = page_util.is_fav(request, teacher.org.id, 2)
-        return render(request, 'teacher-detail.html',
+        return render(request, 'teacher/teacher-detail.html',
                       {'teacher': teacher,
                        'all_courses': all_courses,
                        'teachers_rank': teachers_rank,

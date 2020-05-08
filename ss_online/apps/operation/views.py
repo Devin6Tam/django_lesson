@@ -19,6 +19,8 @@ class AddFavView(LoginRequiredMixin, View):
     :param: LoginRequiredMixin 校验用户是否登录，类似于page_util.not_login
     :param: View 视图对象
     """
+    login_url = '/login/'
+
     def post(self, request, *args, **kwargs):
         user = request.user
         # login_flag = page_util.not_login(request)
@@ -50,6 +52,8 @@ class AddFavView(LoginRequiredMixin, View):
 
 # 添加评论
 class AddCommentView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
     def post(self, request, *args, **kwargs):
         user = request.user
         # login_flag = page_util.not_login(request)
