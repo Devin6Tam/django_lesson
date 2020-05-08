@@ -198,7 +198,7 @@ class TeachersDetailView(View):
         teachers_rank = Teachers.objects.order_by(f'-{page_util.get_order_by("hot")}')
 
         # 课程、机构收藏标识获取
-        teacher_fav_flag = page_util.is_fav(request, teacher.id, 1)
+        teacher_fav_flag = page_util.is_fav(request, teacher.id, 3)
         org_fav_flag = page_util.is_fav(request, teacher.org.id, 2)
         return render(request, 'teacher/teacher-detail.html',
                       {'teacher': teacher,
