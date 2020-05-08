@@ -1,12 +1,13 @@
 import random
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render
 
 # Create your views here.
 from django.views import View
 
-from .models import Courses, CourseTags
+from .models import Courses, CourseTags, Videos, Lessons
 
 from ..operation.models import UserCourse
 from ..util import page_util
@@ -72,42 +73,109 @@ class CourseDetailView(View):
                        'course_fav_flag': course_fav_flag,
                        'org_fav_flag': org_fav_flag})
 
+
+"""
+已优化处理，采用更简便的前端交互方式
+
 # 查看课程章节信息
-class CourseLessonsView(View):
+class CourseLessonsView(LoginRequiredMixin, View):
     def get(self, request, course_id, *args, **kwargs):
-
         course = Courses.objects.get(id=int(course_id))
-
-        user_courses = UserCourse.objects.filter(user=request.user).exclude(course=course)
-        if len(user_courses) > 5:
-            user_courses = user_courses[:5]
-
-        related_courses = list(set([user_course.course for user_course in user_courses]))
-
-        return render(request, 'course-video.html', {'course': course, 'related_courses': related_courses, 'choice': 'video'})
+        context = lesson_common(course, 'video')
+        return render(request, 'course-video.html', context)
 
 
 # 查看课程评论
-class CourseCommentsView(View):
+class CourseCommentsView(LoginRequiredMixin, View):
     def get(self, request, course_id, *args, **kwargs):
         course = Courses.objects.get(id=int(course_id))
-
-        user_courses = UserCourse.objects.filter(user=request.user).exclude(course=course)
-        if len(user_courses) > 5:
-            user_courses = user_courses[:5]
-
-        all_comments = course.coursecomments_set.all()
+        # 所有评论
+        all_comments = course.coursecomments_set.order_by('-add_time')
         all_comments = page_util.set_page(request, all_comments)
-        related_courses = list(set([user_course.course for user_course in user_courses]))
-        return render(request, 'course-comment.html',
-                      {'course': course,
-                       'all_comments': all_comments,
-                       'related_courses': related_courses,
-                       'choice': 'comment'})
+
+        context = lesson_common(course, 'comment')
+        context['all_comments'] = all_comments
+
+        return render(request, 'course-comment.html', context)
 
 
-# 添加评论
-class CourseAddCommentView(View):
-    def post(self, request, course_id, *args, **kwargs):
+class CourseVideoPlayView(LoginRequiredMixin, View):
+    def get(self, request, course_id, lesson_id, video_id, *args, **kwargs):
+        course = Courses.objects.get(id=int(course_id))
+        lesson = Lessons.objects.get(id=lesson_id, course_id=course_id)
+        video = Videos.objects.get(id=int(video_id), lesson=lesson)
 
-        return JsonResponse({'status': 'success'})
+        context = lesson_common(course, 'play_video')
+        context['lesson'] = lesson
+        context['video'] = video
+
+        return render(request, 'course-play-video.html', context)
+
+
+class CourseCommentsPlayView(LoginRequiredMixin, View):
+    def get(self, request, course_id, lesson_id, video_id, *args, **kwargs):
+
+        course = Courses.objects.get(id=int(course_id))
+        lesson = Lessons.objects.get(id=lesson_id, course_id=course_id)
+        video = Videos.objects.get(id=int(video_id), lesson=lesson)
+        # 所有评论
+        all_comments = course.coursecomments_set.order_by('-add_time')
+        all_comments = page_util.set_page(request, all_comments)
+
+        context = lesson_common(course, 'play_comment')
+        context['lesson'] = lesson
+        context['video'] = video
+        context['all_comments'] = all_comments
+        return render(request, 'course-play-comment.html', context)
+"""
+
+class CourseLessonCommentView(LoginRequiredMixin, View):
+    def get(self, request, course_id, *args, **kwargs):
+
+        course = Courses.objects.get(id=int(course_id))
+        # 所有评论
+        all_comments = course.coursecomments_set.order_by('-add_time')
+        all_comments = page_util.set_page(request, all_comments)
+
+        context = lesson_common(course, 'lesson')
+        context['all_comments'] = all_comments
+        return render(request, 'course-lesson.html', context)
+
+
+class CoursePlayCommentsView(LoginRequiredMixin, View):
+    def get(self, request, course_id, lesson_id, video_id, *args, **kwargs):
+
+        course = Courses.objects.get(id=int(course_id))
+        lesson = Lessons.objects.get(id=lesson_id, course_id=course_id)
+        video = Videos.objects.get(id=int(video_id), lesson=lesson)
+        # 所有评论
+        all_comments = course.coursecomments_set.order_by('-add_time')
+        all_comments = page_util.set_page(request, all_comments)
+
+        context = lesson_common(course, 'video')
+        context['lesson'] = lesson
+        context['video'] = video
+        context['all_comments'] = all_comments
+        return render(request, 'course-play.html', context)
+
+
+# 课程章节公共模块
+def lesson_common(course, choice):
+    """
+    课程章节公共模块
+    :param: course 课程信息
+    :param: choice 选择，用于tab切换高亮显示
+    :param: context 返回字典
+    """
+    # 获取该用户其他课程信息
+    user_courses = UserCourse.objects.filter(course_id=course.id).exclude(course=course)
+    if len(user_courses) > 5:
+        user_courses = user_courses[:5]
+    related_courses = list(set([user_course.course for user_course in user_courses]))
+
+    context = {
+        'course': course,
+        'related_courses': related_courses,
+        'choice': choice
+    }
+    return context

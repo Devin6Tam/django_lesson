@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title %}
-    公开课列表 - 六星在线网
+    课程详情 - 六星在线网
 {% endblock %}
 
 
@@ -61,7 +61,7 @@
                                         收藏
                                     {% endif %}
                                 </div>
-                                <div class="buy btn"><a style="color: white" href="{% url 'course:lesson_list' course.id %}">开始学习</a></div>
+                                <div class="buy btn"><a style="color: white" href="{% url 'course:lesson_comment' course.id %}">开始学习</a></div>
                             </div>
                         </div>
 

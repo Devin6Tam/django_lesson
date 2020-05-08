@@ -3,7 +3,7 @@
 # @Time    : 2020/5/6 18:12
 # @Author  : tanxw
 # @Desc    : 分页帮助工具
-
+from django.http import JsonResponse
 from pure_pagination import Paginator, PageNotAnInteger
 
 from apps.operation.models import UserFavorite
@@ -47,6 +47,21 @@ def is_fav(request, fav_id, fav_type):
         else:
             fav_flag = False
     return fav_flag
+
+
+# 用户未登录 返回处理
+def not_login(user):
+    """
+    用户未登录 返回处理
+    :param: request 请求对象
+    :return: JsonResponse
+    """
+    if not user.is_authenticated:
+        return JsonResponse({
+            'status': 'fail',
+            'msg': '用户未登录'
+        })
+    return False
 
 
 # 获取排序字段

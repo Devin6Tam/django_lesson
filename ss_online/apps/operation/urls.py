@@ -4,9 +4,10 @@
 # @Author  : tanxw
 # @Desc    : 子app 路由信息
 from django.urls import path, include
-from django.views.generic import TemplateView
-from .views import AddFavView
+from .views import AddFavView, AddCommentView
 
 urlpatterns = [
     path(r'add_fav/', AddFavView.as_view(), name='add_fav'),
+    # 课程-添加评论
+    path(r'add_comment/', AddCommentView.as_view(), name='add_comment'),
 ]

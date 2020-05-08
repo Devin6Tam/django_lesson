@@ -2,10 +2,13 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from apps.user.models import BaseModel
 from apps.course.models import Courses
+
 # Create your models here.
 
 UserProfile = get_user_model()
 
+
+# 轮播图展览
 class Banner(BaseModel):
     title = models.CharField(max_length=100, verbose_name="标题")
     image = models.ImageField(upload_to="bannel/%Y/%m", max_length=200, verbose_name="链接图片")
@@ -19,6 +22,8 @@ class Banner(BaseModel):
     def __str__(self):
         return self.title
 
+
+# 立即咨询
 class UserAsk(BaseModel):
     name = models.CharField(max_length=20, verbose_name="姓名")
     mobile = models.CharField(max_length=11, verbose_name="手机号")
@@ -31,6 +36,8 @@ class UserAsk(BaseModel):
     def __str__(self):
         return "{name}_{course}({mobile})".format(name=self.name, course=self.course_name, mobile=self.mobile)
 
+
+# 评论
 class CourseComments(BaseModel):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="用户")
     course = models.ForeignKey(Courses, on_delete=models.CASCADE, verbose_name="课程")
@@ -43,6 +50,8 @@ class CourseComments(BaseModel):
     def __str__(self):
         return self.comments
 
+
+# 收藏
 class UserFavorite(BaseModel):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="用户")
     fav_id = models.IntegerField(verbose_name="数据")
@@ -55,6 +64,8 @@ class UserFavorite(BaseModel):
     def __str__(self):
         return "{user}_{id}".format(user=self.user.username, id=self.fav_id)
 
+
+# 用户信息
 class UserMessage(BaseModel):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="用户")
     message = models.CharField(max_length=200, verbose_name="消息内容")
@@ -67,6 +78,8 @@ class UserMessage(BaseModel):
     def __str__(self):
         return self.message
 
+
+# 用户课程
 class UserCourse(BaseModel):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, verbose_name="用户")
     course = models.ForeignKey(Courses, on_delete=models.CASCADE, verbose_name="课程")

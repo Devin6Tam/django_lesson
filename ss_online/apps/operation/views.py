@@ -1,23 +1,29 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 from apps.course.models import Courses
 from apps.organization.models import Teachers, CourseOrg, Teachers
-from .models import UserFavorite
+from .models import UserFavorite, CourseComments
 # Create your views here.
 
-# 添加收藏功能
-from .forms import AddFavForm
+
+from .forms import AddFavForm, AddCommentForm
+from ..util import page_util
 
 
-class AddFavView(View):
+# 添加收藏
+class AddFavView(LoginRequiredMixin, View):
+    """
+    添加收藏
+    :param: LoginRequiredMixin 校验用户是否登录，类似于page_util.not_login
+    :param: View 视图对象
+    """
     def post(self, request, *args, **kwargs):
         user = request.user
-        if not user.is_authenticated:
-            return JsonResponse({
-                'status': 'fail',
-                'msg': '用户未登录'
-            })
+        # login_flag = page_util.not_login(request)
+        # if not login_flag:
+        #     return login_flag
         form = AddFavForm(request.POST)
         if form.is_valid():
             fav_type = form.cleaned_data['fav_type']
@@ -38,6 +44,24 @@ class AddFavView(View):
                     'status': 'success',
                     'msg': '已收藏'
                 })
+        else:
+            return JsonResponse({'status': 'fail', 'msg': '参数错误'})
+
+
+# 添加评论
+class AddCommentView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        # login_flag = page_util.not_login(request)
+        # if not login_flag:
+        #     return login_flag
+        form = AddCommentForm(request.POST)
+        if form.is_valid():
+            course = form.cleaned_data['course']
+            comments = form.cleaned_data['comments']
+            course_comments_obj = CourseComments(user=user, course=course, comments=comments)
+            course_comments_obj.save()
+            return JsonResponse({'status': 'success'})
         else:
             return JsonResponse({'status': 'fail', 'msg': '参数错误'})
 
