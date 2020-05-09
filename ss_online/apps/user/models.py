@@ -28,3 +28,6 @@ class UserProfile(AbstractUser):
         db_table = 'user_profile'
         verbose_name = '用户信息表'
         verbose_name_plural = verbose_name
+
+    def msg_not_read(self):
+        return self.usermessage_set.filter(has_read=False).count()

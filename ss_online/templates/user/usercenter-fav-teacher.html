@@ -51,7 +51,7 @@
 
                     </div>
                     <div class="messagelist">
-                        {% for teacher in all_tearchers %}
+                        {% for teacher in all_tearchers.object_list %}
                             <div class=" butler_list butler-fav-box">
                             <dl class="des users">
                                 <dt>
@@ -80,6 +80,35 @@
                         </div>
                         {% endfor %}
                     </div>
+                    <div class="pageturn pagerright">
+                        <ul class="pagelist">
+                            {% if all_tearchers.has_previous %}
+                                <li class="long"><a
+                                        href="?{{ all_tearchers.previous_page_number.querystring }}">上一页</a>
+                                </li>
+
+                            {% endif %}
+                            {% for page in all_tearchers.pages %}
+                                {% if page %}
+                                    {% ifequal page all_tearchers.number %}
+                                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+
+                                    {% else %}
+                                        <li class=""><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                    {% endifequal %}
+                                {% else %}
+                                    <li>...</li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if all_tearchers.has_next %}
+                                <li class="long"><a
+                                        href="?{{ all_tearchers.next_page_number.querystring }}">下一页</a></li>
+
+                            {% endif %}
+
+                        </ul>
+                    </div>
+
                 </div>
             </div>
 

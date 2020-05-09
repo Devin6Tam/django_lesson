@@ -1,6 +1,7 @@
 import random
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render
 
@@ -21,6 +22,13 @@ class CourseListView(View):
 
         # 课程列表
         courses = Courses.objects.order_by(f'-{page_util.get_order_by(sort)}')
+
+        # 首页搜索功能
+        keywords = request.GET.get('keywords', None)
+        if keywords:
+            courses = courses.filter(
+                Q(name__icontains=keywords) | Q(desc__icontains=keywords) | Q(detail__icontains=keywords))
+
         # 设置分页
         courses = page_util.set_page(request, courses)
 
@@ -129,10 +137,11 @@ class CourseCommentsPlayView(LoginRequiredMixin, View):
         return render(request, 'course-play-comment.html', context)
 """
 
+
 class CourseLessonCommentView(LoginRequiredMixin, View):
     login_url = '/login/'
-    def get(self, request, course_id, *args, **kwargs):
 
+    def get(self, request, course_id, *args, **kwargs):
         course = Courses.objects.get(id=int(course_id))
         # 所有评论
         all_comments = course.coursecomments_set.order_by('-add_time')
@@ -145,8 +154,8 @@ class CourseLessonCommentView(LoginRequiredMixin, View):
 
 class CoursePlayCommentsView(LoginRequiredMixin, View):
     login_url = '/login/'
-    def get(self, request, course_id, lesson_id, video_id, *args, **kwargs):
 
+    def get(self, request, course_id, lesson_id, video_id, *args, **kwargs):
         course = Courses.objects.get(id=int(course_id))
         lesson = Lessons.objects.get(id=lesson_id, course_id=course_id)
         video = Videos.objects.get(id=int(video_id), lesson=lesson)

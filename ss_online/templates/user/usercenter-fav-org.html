@@ -51,7 +51,7 @@
 
                     </div>
                     <div class="messagelist">
-                        {% for org in all_orgs %}
+                        {% for org in all_orgs.object_list %}
                             <div class="messages butler_list company company-fav-box">
                                 <dl class="des fr">
                                     <dt>
@@ -77,6 +77,35 @@
                                 </dl>
                             </div>
                         {% endfor %}
+                    </div>
+
+                    <div class="pageturn pagerright">
+                        <ul class="pagelist">
+                            {% if all_orgs.has_previous %}
+                                <li class="long"><a
+                                        href="?{{ all_orgs.previous_page_number.querystring }}">上一页</a>
+                                </li>
+
+                            {% endif %}
+                            {% for page in all_orgs.pages %}
+                                {% if page %}
+                                    {% ifequal page all_orgs.number %}
+                                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+
+                                    {% else %}
+                                        <li class=""><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                                    {% endifequal %}
+                                {% else %}
+                                    <li>...</li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if all_orgs.has_next %}
+                                <li class="long"><a
+                                        href="?{{ all_orgs.next_page_number.querystring }}">下一页</a></li>
+
+                            {% endif %}
+
+                        </ul>
                     </div>
                 </div>
             </div>

@@ -17,8 +17,9 @@ from apps.util.smsbao.sms_api import sms_send_message, status_str
 # Create your views here.
 # 用户密码登录
 from ..course.models import Courses
-from ..operation.models import UserCourse, UserFavorite
+from ..operation.models import UserCourse, UserFavorite, UserMessage
 from ..organization.models import CourseOrg, Teachers
+from ..util import page_util
 
 
 class UserLoginView(View):
@@ -224,9 +225,10 @@ class UserCourseView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
 
-        user_courses = UserCourse.objects.filter(user=request.user)
+        user_courses = UserCourse.objects.filter(user=request.user).order_by('-add_time')
 
         all_courses = [user_course.course for user_course in user_courses]
+        all_courses = page_util.set_page(request, all_courses)
         return render(request, 'user/usercenter-mycourse.html', {'all_courses': all_courses})
 
 
@@ -237,13 +239,16 @@ class UserFavoriteView(LoginRequiredMixin, View):
         user_favorites = UserFavorite.objects.filter(user=request.user, fav_type=fav_type)
         fav_ids = [user_favorite.fav_id for user_favorite in user_favorites]
         if fav_type == 1:
-            all_courses = Courses.objects.filter(id__in=fav_ids)
+            all_courses = Courses.objects.filter(id__in=fav_ids).order_by('-add_time')
+            all_courses = page_util.set_page(request, all_courses)
             return render(request, 'user/usercenter-fav-course.html', {'all_courses': all_courses, 'fav_type': fav_type})
         elif fav_type == 2:
-            all_orgs = CourseOrg.objects.filter(id__in=fav_ids)
+            all_orgs = CourseOrg.objects.filter(id__in=fav_ids).order_by('-add_time')
+            all_orgs = page_util.set_page(request, all_orgs)
             return render(request, 'user/usercenter-fav-org.html', {'all_orgs': all_orgs, 'fav_type': fav_type})
         elif fav_type == 3:
-            all_tearchers = Teachers.objects.filter(id__in=fav_ids)
+            all_tearchers = Teachers.objects.filter(id__in=fav_ids).order_by('-add_time')
+            all_tearchers = page_util.set_page(request, all_tearchers)
             return render(request, 'user/usercenter-fav-teacher.html', {'all_tearchers': all_tearchers, 'fav_type': fav_type})
 
 
@@ -251,4 +256,10 @@ class UserMessageView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'user/usercenter-message.html')
+        all_messages = UserMessage.objects.filter(user=request.user).order_by('-add_time')
+        # 查看信息的时候，都设置已读，这里比较粗糙，可以在点击单个详情的时候设置
+        for msg in all_messages:
+            msg.has_read = True
+            msg.save()
+        all_messages = page_util.set_page(request, all_messages)
+        return render(request, 'user/usercenter-message.html', {'all_messages': all_messages})

@@ -26,6 +26,7 @@ class Courses(BaseModel):
     course_fee = models.DecimalField(max_digits=18, decimal_places=2, verbose_name='课程费用')
     is_classic = models.BooleanField(default=False, verbose_name='是否经典')
     notices = models.CharField(max_length=300, default='', verbose_name='课程公告')
+    is_banner = models.BooleanField(default=False, verbose_name='课程封面是否轮播')
 
     class Meta:
         verbose_name = '课程信息'

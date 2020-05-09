@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views import View
 from apps.course.models import Courses
 from apps.organization.models import Teachers, CourseOrg, Teachers
-from .models import UserFavorite, CourseComments
+from .models import UserFavorite, CourseComments, Banner
 # Create your views here.
 
 
@@ -68,6 +68,20 @@ class AddCommentView(LoginRequiredMixin, View):
             return JsonResponse({'status': 'success'})
         else:
             return JsonResponse({'status': 'fail', 'msg': '参数错误'})
+
+
+# 首页
+class IndexView(View):
+    def get(self, request, *args, **kwargs):
+        banners = Banner.objects.order_by('index')
+        banner_courses = Courses.objects.filter(is_banner=True).order_by('-add_time')
+        index_orgs = CourseOrg.objects.all().order_by('-fav_num')
+        return render(request, 'index.html',
+                      {'banners': banners,
+                       'banner_courses': banner_courses,
+                       'index_orgs': index_orgs})
+
+
 
 
 # 收藏统计

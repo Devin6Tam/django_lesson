@@ -48,6 +48,11 @@ class OrgListView(View):
         # F传参方式
         orgs = CourseOrg.objects.filter(con).order_by(f'-{page_util.get_org_order_by(sort)}')
 
+        keywords = request.GET.get('keywords', None)
+        if keywords:
+            orgs = orgs.filter(
+                Q(name__icontains=keywords) | Q(desc__icontains=keywords))
+
         # 第三种方式 条件判断嵌套比较复杂，可以省略
         # if sort == 'students':
         #     if ct:
@@ -177,6 +182,10 @@ class TeachersListView(View):
         sort = request.GET.get('sort', '')
 
         all_teachers = Teachers.objects.order_by(f'-{page_util.get_order_by(sort)}')
+        keywords = request.GET.get('keywords', None)
+        if keywords:
+            all_teachers = all_teachers.filter(Q(name__icontains=keywords))
+
         all_teachers = page_util.set_page(request, all_teachers)
 
         teachers_rank = Teachers.objects.order_by(f'-{page_util.get_order_by("hot")}')

@@ -1,0 +1,28 @@
+<div class="pageturn pagerright">
+    <ul class="pagelist">
+        {% if all_datas.has_previous %}
+            <li class="long"><a
+                    href="?{{ all_datas.previous_page_number.querystring }}">上一页</a>
+            </li>
+
+        {% endif %}
+        {% for page in all_datas.pages %}
+            {% if page %}
+                {% ifequal page all_datas.number %}
+                    <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+
+                {% else %}
+                    <li class=""><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                {% endifequal %}
+            {% else %}
+                <li>...</li>
+            {% endif %}
+        {% endfor %}
+        {% if all_datas.has_next %}
+            <li class="long"><a
+                    href="?{{ all_datas.next_page_number.querystring }}">下一页</a></li>
+
+        {% endif %}
+
+    </ul>
+</div>

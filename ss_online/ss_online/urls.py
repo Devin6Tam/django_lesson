@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.views.static import serve
 
+from apps.operation.views import IndexView
 from apps.user.views import UserLoginView, UserSmsLoginView, RegisterView, UserLogoutView, SendSmsView
 from django.conf.urls import url
 import xadmin
@@ -28,7 +29,9 @@ urlpatterns = [
     # 后台管理平台
     path(r'xadmin/', xadmin.site.urls),
     # 网站首页
-    path(r'', TemplateView.as_view(template_name='index.html'), name="index"),
+    # path(r'', TemplateView.as_view(template_name='index.html'), name="index"),
+    path(r'', IndexView.as_view(), name="index"),
+
     # （密码）登录
     path(r'login/', UserLoginView.as_view(), name='login'),
     # 发送短信
