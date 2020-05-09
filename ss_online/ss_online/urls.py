@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.views.static import serve
 
-from apps.operation.views import IndexView, page_403, page_404, page_500
+from apps.operation.views import IndexView
 from apps.user.views import UserLoginView, UserSmsLoginView, RegisterView, UserLogoutView, SendSmsView
 from django.conf.urls import url
 import xadmin
