@@ -78,7 +78,7 @@
                         </p>
                     </div>
                     <div class="btn fr collectionbtn  notlogin
-                         " data-favid="22" data-fav-type="1">
+                         " data-favid="{{ org.id }}" data-fav-type="2">
                         {% if fav_flag %} 已收藏 {% else %} 收藏 {% endif %}
                     </div>
 
@@ -153,7 +153,6 @@
 <script type="text/javascript">
     //收藏分享
     function add_fav(current_elem, fav_id, fav_type) {
-        var csrftoken = getCookie('csrftoken');
         $.ajax({
             cache: false,
             type: "POST",
@@ -161,7 +160,7 @@
             data: {'fav_id': fav_id, 'fav_type': fav_type},
             async: true,
             beforeSend: function (xhr, settings) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
             },
             success: function (data) {
                 if (data.status == 'fail') {
@@ -180,7 +179,7 @@
 
     $(document).ready(function () {
         $('.collectionbtn').on('click', function () {
-            add_fav($(this), {{ org.id }}, {{ fav_type }});
+            add_fav($(this), {{ org.id }}, "2");
         });
     });
     $(function () {
@@ -207,11 +206,11 @@
                 if (type == '1') {
                     favPraise($(this), 'fav', 1, '收藏');
 
-                } else if (type == '3') {
-                    favPraise($(this), 'fav', 3);
+                } else if (type == '2') {
+                    favPraise($(this), 'fav', 2);
 
-                } else if (type == '11') {
-                    favPraise($(this), 'pra', 1);
+                } else if (type == '3') {
+                    favPraise($(this), 'pra', 3);
 
                 } else if (type == '4') {
                     favPraise($(this), 'fav', 4);

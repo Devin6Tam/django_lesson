@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.views.static import serve
-
+from .settings import DEBUG
 from apps.operation.views import IndexView
 from apps.user.views import UserLoginView, UserSmsLoginView, RegisterView, UserLogoutView, SendSmsView
 from django.conf.urls import url
@@ -54,6 +54,11 @@ urlpatterns = [
     path(r'user/', include(('apps.user.urls', 'user'), namespace='user')),
     # 媒体文件
     url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
-    # 静态文件 生产必配
-    url(r'^static/(?P<path>.*)', serve, {'document_root': settings.STATIC_ROOT}),
+    # # 静态文件 生产必配
+    # url(r'^static/(?P<path>.*)', serve, {'document_root': settings.STATIC_ROOT}),
 ]
+
+if not DEBUG:  # 生产环境 添加静态目录路由
+     urlpatterns += [
+        re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+     ]

@@ -67,18 +67,13 @@
 						<div class="module1_2 box">
 							<div class="imgslide2">
 								<ul class="imgs">
-                                    <li>
-                                        <a href="course/course-detail.html">
-                                            <img width="470" height="300" src="{% static 'media/courses/2019/12/python文件处理.jpg' %}" />
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a href="course/course-detail.html">
-                                            <img width="470" height="300" src="{% static 'media/courses/2019/12/python面向对象.jpg' %}" />
-                                        </a>
-                                    </li>
-
+                                    {% for course in banner_courses %}
+                                        <li>
+                                            <a href="{% url 'course:detail' course.id %}">
+                                                <img width="470" height="300" src="{{ course.image.url }}" />
+                                            </a>
+                                        </li>
+                                    {% endfor %}
 								</ul>
 							</div>
 							<div class="unslider-arrow2 prev"></div>
