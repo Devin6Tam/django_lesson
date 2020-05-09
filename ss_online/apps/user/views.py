@@ -1,4 +1,6 @@
+from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
@@ -13,13 +15,23 @@ import redis
 from django.conf import settings
 from apps.util.smsbao.sms_api import sms_send_message, status_str
 
-
 # Create your views here.
 # 用户密码登录
-from ..course.models import Courses
-from ..operation.models import UserCourse, UserFavorite, UserMessage
-from ..organization.models import CourseOrg, Teachers
-from ..util import page_util
+from apps.course.models import Courses
+from apps.operation.models import UserCourse, UserFavorite, UserMessage
+from apps.organization.models import CourseOrg, Teachers
+from apps.util import page_util
+
+
+# 自定义登录(可以通过用户名、手机号、邮箱来登录)
+class CustomAuth(ModelBackend):
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        user = UserProfile.objects.get(Q(username=username) | Q(mobile=username) | Q(email=username))
+        try:
+            if user.check_password(password):
+                return user
+        except Exception as ex:
+            return None
 
 
 class UserLoginView(View):
@@ -220,11 +232,11 @@ class UserImageUploadView(LoginRequiredMixin, View):
             return JsonResponse(form.errors)
 
 
+# 我的课程
 class UserCourseView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request, *args, **kwargs):
-
         user_courses = UserCourse.objects.filter(user=request.user).order_by('-add_time')
 
         all_courses = [user_course.course for user_course in user_courses]
@@ -232,6 +244,7 @@ class UserCourseView(LoginRequiredMixin, View):
         return render(request, 'user/usercenter-mycourse.html', {'all_courses': all_courses})
 
 
+# 我的收藏
 class UserFavoriteView(LoginRequiredMixin, View):
     login_url = '/login/'
 
@@ -241,7 +254,8 @@ class UserFavoriteView(LoginRequiredMixin, View):
         if fav_type == 1:
             all_courses = Courses.objects.filter(id__in=fav_ids).order_by('-add_time')
             all_courses = page_util.set_page(request, all_courses)
-            return render(request, 'user/usercenter-fav-course.html', {'all_courses': all_courses, 'fav_type': fav_type})
+            return render(request, 'user/usercenter-fav-course.html',
+                          {'all_courses': all_courses, 'fav_type': fav_type})
         elif fav_type == 2:
             all_orgs = CourseOrg.objects.filter(id__in=fav_ids).order_by('-add_time')
             all_orgs = page_util.set_page(request, all_orgs)
@@ -249,9 +263,11 @@ class UserFavoriteView(LoginRequiredMixin, View):
         elif fav_type == 3:
             all_tearchers = Teachers.objects.filter(id__in=fav_ids).order_by('-add_time')
             all_tearchers = page_util.set_page(request, all_tearchers)
-            return render(request, 'user/usercenter-fav-teacher.html', {'all_tearchers': all_tearchers, 'fav_type': fav_type})
+            return render(request, 'user/usercenter-fav-teacher.html',
+                          {'all_tearchers': all_tearchers, 'fav_type': fav_type})
 
 
+# 我的消息
 class UserMessageView(LoginRequiredMixin, View):
     login_url = '/login/'
 

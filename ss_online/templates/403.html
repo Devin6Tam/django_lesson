@@ -1,0 +1,14 @@
+{% extends 'base/error-base.html' %}
+{% load staticfiles %}
+{% block title %}403{% endblock %}
+{% block error_code %}403{% endblock %}
+{% block content %}
+    <div class="fl error_cut"><img src="/static/images/pic403.png"/></div>
+    <div class="fr error_cut">
+        <img src="/static/images/word403.png"/>
+        <h1>没有访问权限！</h1>
+        <br/><br/><br/><br/><br/><br/>
+        <p>请求被拒！</p>
+        <p>您可以尝试<span class="red">【重新加载此页面】</span></p>
+    </div>
+{% endblock %}

@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.views.static import serve
 
-from apps.operation.views import IndexView
+from apps.operation.views import IndexView, page_403, page_404, page_500
 from apps.user.views import UserLoginView, UserSmsLoginView, RegisterView, UserLogoutView, SendSmsView
 from django.conf.urls import url
 import xadmin
@@ -53,5 +53,7 @@ urlpatterns = [
     # 用户操作
     path(r'user/', include(('apps.user.urls', 'user'), namespace='user')),
     # 媒体文件
-    url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT})
+    url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
+    # 静态文件 生产必配
+    url(r'^static/(?P<path>.*)', serve, {'document_root': settings.STATIC_ROOT}),
 ]

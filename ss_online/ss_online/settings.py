@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = 'd=1_fal-m6sj1adi4i2@!pvo6y^#e0p-4(vu%5snakva5c_m1d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'apps.exception.system_exception.SystemException',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -135,12 +136,13 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 # 静态资源文件访问路径
-# STATIC_ROOT可以不加，但导出依赖库的静态文件，需要使用到
-STATIC_ROOT = '/static/'
+# 开发环境下,不可配置STATIC_ROOT、MEDIA_ROOT
+# 在生产环下,需要配置STATIC_ROOT、MEDIA_ROOT,以及STATICFILES_DIRS 采用“/var/www/static/”路径
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    # os.path.join(BASE_DIR, "static"),
     # '/var/www/static/',
 ]
 
@@ -150,6 +152,11 @@ MEDIA_URL = '/media/'
 
 # 指定用户信息表
 AUTH_USER_MODEL = 'user.UserProfile'
+
+# 自定义django后台身份验证
+AUTHENTICATION_BACKENDS = [
+    "apps.user.views.CustomAuth",
+]
 
 # 导入导出使用事务
 IMPORT_EXPORT_USE_TRANSACTIONS = True

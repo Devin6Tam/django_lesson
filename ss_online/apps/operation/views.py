@@ -82,8 +82,6 @@ class IndexView(View):
                        'index_orgs': index_orgs})
 
 
-
-
 # 收藏统计
 # fav_type 收藏类型
 # fav_id 收藏ID
