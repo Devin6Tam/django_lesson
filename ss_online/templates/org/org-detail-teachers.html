@@ -32,28 +32,7 @@
             </div>
         </div>
     </div>
-    <div class="pageturn">
-            <ul class="pagelist">
-                {% if teachers.has_previous %}
-                    <li class="long"><a href="?{{ teachers.previous_page_number.querystring }}">上一页</a></li>
-
-                {% endif %}
-                {% for page in teachers.pages %}
-                    {% if page %}
-                        {% ifequal page teachers.number %}
-                            <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
-
-                        {% else %}
-                            <li class=""><a href="?{{ page.querystring }}">{{ page }}</a></li>
-                        {% endifequal %}
-                    {% else %}
-                        <li>...</li>
-                    {% endif %}
-                {% endfor %}
-                {% if teachers.has_next %}
-                    <li class="long"><a href="?{{ teachers.next_page_number.querystring }}">下一页</a></li>
-
-                {% endif %}
-            </ul>
-        </div>
+    {% with teachers as all_datas %}
+        {% include 'base/page-paging.html' %}
+    {% endwith %}
 {% endblock %}

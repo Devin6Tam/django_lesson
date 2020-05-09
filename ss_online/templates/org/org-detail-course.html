@@ -4,58 +4,36 @@
 {% block title %}机构详情-六星在线教育{% endblock %}
 
 {% block content %}
-<div class="right companycenter layout" >
-    <div class="head">
-        <h1>机构课程</h1>
-    </div>
-    <div class="brief group_list">
-        {% for course in courses.object_list %}
-        <div class="module1_5 box">
-            <a class="comp-img-box" href="{% url 'course:detail' course.id %}">
-                <img width="214" height="195" src={{ course.image.url }}/>
-            </a>
-            <div class="des">
-                <a href="{% url 'course:detail' course.id %}"><h2>{{ course.name }}</h2></a>
-                <span class="fl">课时：<i class="key">{{ course.learn_time }}</i></span>
-                <span class="fr">学习人数：{{ course.students }}</span>
-            </div>
-            <div class="bottom">
-                <span class="fl">{{ org.name }}</span>
-                 <span class="star fr  notlogin
+    <div class="right companycenter layout">
+        <div class="head">
+            <h1>机构课程</h1>
+        </div>
+        <div class="brief group_list">
+            {% for course in courses.object_list %}
+                <div class="module1_5 box">
+                    <a class="comp-img-box" href="{% url 'course:detail' course.id %}">
+                        <img width="214" height="195" src={{ course.image.url }}/>
+                    </a>
+                    <div class="des">
+                        <a href="{% url 'course:detail' course.id %}"><h2>{{ course.name }}</h2></a>
+                        <span class="fl">课时：<i class="key">{{ course.learn_time }}</i></span>
+                        <span class="fr">学习人数：{{ course.students }}</span>
+                    </div>
+                    <div class="bottom">
+                        <span class="fl">{{ org.name }}</span>
+                        <span class="star fr  notlogin
                     " data-favid="13" data-fav-type="4">
                     {{ org.fav_num }}
                 </span>
-            </div>
-        </div>
-        {% endfor %}
-
-    </div>
-    <div class="pageturn">
-        <ul class="pagelist">
-            {% if courses.has_previous %}
-                <li class="long"><a href="?{{ courses.previous_page_number.querystring }}">上一页</a></li>
-
-            {% endif %}
-
-            {% for page in courses.pages %}
-                {% if page %}
-                    {% ifequal page courses.number %}
-                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
-
-                    {% else %}
-                        <li class=""><a href="?{{ page.querystring }}">{{ page }}</a></li>
-                    {% endifequal %}
-                {% else %}
-                    <li>...</li>
-                {% endif %}
+                    </div>
+                </div>
             {% endfor %}
 
-            {% if courses.has_next %}
-                <li class="long"><a href="?{{ courses.next_page_number.querystring }}">下一页</a></li>
-            {% endif %}
-        </ul>
+        </div>
+        {% with courses as all_datas %}
+            {% include 'base/page-paging.html' %}
+        {% endwith %}
     </div>
-</div>
 {% endblock %}
 
 
