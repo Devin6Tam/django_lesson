@@ -84,5 +84,5 @@ pkill -f uwsgi -9
 构建镜像
 docker build -t ss_online:v1 .
 
-docker run -itd -p 3031:3031 -p 80:80 ss_online:v1
+docker run -itd -p 3031:3031 -p 80:80 --name=ss_online  ss_online:v1
 ```

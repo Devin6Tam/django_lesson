@@ -3,10 +3,11 @@ FROM ubuntu:18.04
 MAINTAINER tanxw
 
 # Install required packages and remove the apt packages cache when done.
+#ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y \
+    apt-get install -y --assume-yes apt-utils \
 	git \
 	python3 \
 	python3-dev \
@@ -18,13 +19,20 @@ RUN apt-get update && \
    rm -rf /var/lib/apt/lists/*
 
 # install uwsgi now because it takes a little while
-RUN pip3 install uwsgi
+RUN pip install uwsgi -i https://mirrors.aliyun.com/pypi/simple/
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 COPY nginx.conf /etc/nginx/sites-available/default
 
 COPY . /var/www/
-RUN pip install -r /var/www/requirements.txt
+
+RUN ls -a /var/www/
+
+RUN pip -V
+
+RUN export LANG=en_US.UTF-8
+
+RUN pip install -r /var/www/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/ --no-cache-dir
 
 EXPOSE 80
 
