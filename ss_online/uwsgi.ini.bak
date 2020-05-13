@@ -16,8 +16,8 @@ stats = 127.0.0.1:9191
 # pyhome = /root/.pyenv/versions/3.6.8/bin
 pyhome = /usr/local/bin/
 # 使用非虚拟环境，需要加上
-pythonpath = /usr/local/lib/python3.6
-pythonpath = /usr/local/lib/python3.6/site-packages
+PYTHONHOME = /usr/local/bin/
+PYTHONPATH = /usr/local/lib/python3.6/site-packages
 # 存放进程编号的文件
 pidfile=uwsgi.pid
 daemonize = /tmp/mylog.log

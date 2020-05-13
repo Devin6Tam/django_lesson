@@ -28,7 +28,7 @@ RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
 RUN source ~/.bash_profile
 
 # 使用pyenv配置python环境
-RUN v=3.7.7 && \
+RUN v=3.6.8 && \
     wget http://mirrors.sohu.com/python/$v/Python-$v.tar.xz -P $(pyenv root)/cache/ && \
     pyenv install $v && \
     pyenv global $v

@@ -17,7 +17,8 @@ RUN yum install epel-release -y && yum makecache && yum install wget unzip epel-
 
 # 2. 准备python
 RUN wget http://mirrors.sohu.com/python/3.6.8/Python-3.6.8.tar.xz
-RUN xz -d Python-3.6.8.tar.xz && tar xvf Python-3.6.8.tar && cd Python-3.6.8 && ./configure && make && make install
+RUN xz -d Python-3.6.8.tar.xz && tar xvf Python-3.6.8.tar && cd Python-3.6.8 && ./configure --prefix=/usr/local && make && make install
+  && make && make install
 
 # 3. 安装websdk
 RUN pip3 install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple/
