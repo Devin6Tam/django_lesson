@@ -1,9 +1,9 @@
 user  root;
 worker_processes  auto;
 
-error_log  logs/error.log info;
+error_log  /var/log/nginx/error.log info;
 
-pid        logs/nginx.pid;
+pid        /etc/nginx/nginx.pid;
 
 events {
     use epoll;
@@ -18,7 +18,7 @@ http {
     log_format main '$time_iso8601|$status|$request_length|'
                      '$body_bytes_sent|$bytes_sent|$http_host|$request|$request_body|$http_referer|$http_user_agent|$http_x_forwarded_for|'
                      '$remote_addr|$request_time|$upstream_response_time|$upstream_addr';
-    access_log logs/access.log main;
+    access_log /var/log/nginx/access.log main;
 
     sendfile        on;
     #tcp_nopush     on;
@@ -42,5 +42,3 @@ http {
         }
     }
 }
-
-daemon off;

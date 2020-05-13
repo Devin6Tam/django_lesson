@@ -95,7 +95,7 @@ DATABASES = {
         'NAME': 'ss_online',
         'USER': 'root',
         'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
+        'HOST': '192.168.43.186',
         'PORT': 3306,
     }
 }
@@ -168,7 +168,7 @@ PAGINATION_SETTINGS = {
     'SHOW_FIRST_PAGE_WHEN_INVALID': True,
 }
 # redis 数据库
-REDIS_HOST = '127.0.0.1'
+REDIS_HOST = '192.168.43.186'
 REDIS_PORT = 6379
 REDIS_DB = 8
 REDIS_PASSWORD = 'abc123456'
