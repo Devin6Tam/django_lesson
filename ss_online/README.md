@@ -48,10 +48,10 @@ source /usr/local/bin/virtualenvwrapper.sh
 source  ~/.bashrc
 
 新建虚拟环境
-mkvirtualenv ssonline
+mkvirtualenv ss_online
 
 进入虚拟环境 
-workon ssonline
+workon ss_online
 
 安装依赖包
 pip install -r requirements.txt
@@ -69,7 +69,7 @@ sudo systemctl start nginx
 ```
 ```
 测试
-uwsgi --http :8000 --module ssonline.wsgi
+uwsgi --http :8000 --module ss_online.wsgi
 运行项目
 uwsgi uwsgi.ini
 停止项目
@@ -86,3 +86,18 @@ docker build -t ss_online:v1 .
 
 docker run -itd -p 3031:3031 -p 80:80 --name=ss_online  ss_online:v1
 ```
+
+# 注意
+
+```
+1. DjangoUeditor 包需要手动导入
+2. 使用镜像打包时，最好将DjangoUeditor打包成tar包，然后使用
+   RUN COPY DjangoUeditor.tar /root/.pyenv/versions/3.6.8/lib/python3.6/site-packages
+   
+   或 RUN COPY DjangoUeditor.tar /usr/local/lib/python3.6/site-packages
+3. nginx 采用手动打包部署时, 需要将/etc/nginx/nginx.conf中的user改成root,server部分注释掉，使用项目中提供nginx-app.conf,并拷贝至
+   /etc/nginx/conf.d/default.conf
+   若采用镜像部署时，使用nginx.conf.bak 替换掉/etc/nginx/nginx.conf
+
+4. 打包镜像，运行环境有些问题待解决...
+``` 

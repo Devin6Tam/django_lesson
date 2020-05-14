@@ -1,3 +1,4 @@
 #!/bin/bash
 
-/usr/local/bin/uwsgi --ini /var/www/uwsgi.ini && /usr/local/nginx/sbin/nginx
+/root/.pyenv/shims/uwsgi /var/www/uwsgi.ini
+# && /usr/sbin/nginx -g 'daemon off;'

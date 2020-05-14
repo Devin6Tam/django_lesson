@@ -3,7 +3,7 @@ worker_processes  auto;
 
 error_log  /var/log/nginx/error.log info;
 
-pid        /etc/nginx/nginx.pid;
+pid        /run/nginx.pid;
 
 events {
     use epoll;
@@ -24,6 +24,11 @@ http {
     #tcp_nopush     on;
     keepalive_timeout  65;
 
+    #upstream django_web {
+    #    # server unix:///var/www/ss_online.sock; # for a file socket
+    #    server 127.0.0.1:3031; # for a web port socket (we'll use this first)
+    #}
+
     server {
         listen 80;
         server_name localhost;
@@ -31,6 +36,8 @@ http {
         location / {
             include  uwsgi_params;
             uwsgi_pass  127.0.0.1:3031;
+            # uwsgi_pass  unix:///var/www/ss_online.sock;
+            # uwsgi_pass  django_web;
         }
 
         location /static {

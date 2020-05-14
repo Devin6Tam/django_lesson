@@ -33,6 +33,8 @@ ADD . /var/www/
 
 # 5. 安装pip依赖 （生成不全，待解决）
 RUN pip3 install -r /var/www/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+COPY DjangoUeditor.tar /root/.pyenv/versions/3.6.8/lib/python3.6/site-packages
+
 
 # 6. 日志
 VOLUME /var/log/
