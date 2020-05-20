@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>给我们留言</title>
+</head>
+<body>
+<h1>留言：</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    <table>
+        <!--以表单形式展示-->
+{#        {{ form.as_table }}#}
+        {{ form.as_p }}
+    </table>
+    <input type="submit" value="提 交">
+</form>
+
+</body>
+</html>
