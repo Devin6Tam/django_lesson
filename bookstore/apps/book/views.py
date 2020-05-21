@@ -4,9 +4,17 @@ from datetime import datetime
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import View
+from rest_framework.viewsets import ModelViewSet
 
 from .models import BookInfo
 from .forms import ContactForm
+from .serializers import BookInfoSerializer
+
+
+class BookInfoViewSet(ModelViewSet):
+    """图书的数据"""
+    queryset = BookInfo.objects.all()
+    serializer_class = BookInfoSerializer
 
 
 class BookAPIView(View):
