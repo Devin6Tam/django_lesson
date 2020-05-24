@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    # 'django_filters',
+    'apps.user',
     'apps.book',
 ]
 
@@ -127,3 +130,24 @@ STATICFILES_DIRS = [
 
 
 APPEND_SLASH=False
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (  # 默认响应渲染类
+        'rest_framework.renderers.JSONRenderer',  # json渲染器
+        'rest_framework.renderers.BrowsableAPIRenderer',  # 浏览API渲染器
+        # 'rest_framework.authentication.BasicAuthentication',   # 基本认证
+        # 'rest_framework.authentication.SessionAuthentication',  # session认证
+        # 'rest_framework.permissions.IsAuthenticated',  # 权限控制
+        # 'rest_framework.throttling.AnonRateThrottle',  # 限流Throttling
+        # 'rest_framework.throttling.UserRateThrottle',
+        # 'rest_framework.pagination.PageNumberPagination',  # 分页
+        # 'rest_framework.versioning.NamespaceVersioning',   # 版本Versioning
+    ),
+    # 当前页面显示数
+    # 'PAGE_SIZE': 100,
+    # 过滤Filtering, 需要安装django_filters，并在INSTALL_APPS中配置 django_filters
+    # 'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    # 异常处理 Exceptions
+    # 'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+}

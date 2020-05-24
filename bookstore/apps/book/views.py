@@ -4,12 +4,19 @@ from datetime import datetime
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views import View
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from .models import BookInfo
 from .forms import ContactForm
 from .serializers import BookInfoSerializer
 
+class ApiTestView(APIView):
+    def get(self, request):
+        #处理这个请求的逻辑
+        return Response(data={"message": "OK"}, status=status.HTTP_200_OK)
 
 class BookInfoViewSet(ModelViewSet):
     """图书的数据"""

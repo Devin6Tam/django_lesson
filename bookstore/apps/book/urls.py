@@ -15,12 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
+from rest_framework.routers import DefaultRouter
 
 from . import views
+from .views import BookInfoViewSet
 
 urlpatterns = [
     path('reg/', views.reg),
     re_path(r'^contact/$', views.ContactUs.as_view()),
-    re_path(r'^books/$', views.BooksApiView.as_view()),
-    re_path(r'^books/(?P<pk>\d+)/$', views.BookAPIView.as_view()),
+    # re_path(r'^books/$', views.BooksApiView.as_view()),
+    re_path(r'^test/$', views.ApiTestView.as_view()),
+    # re_path(r'^books/(?P<pk>\d+)/$', views.BookAPIView.as_view()),
 ]
+
+# drf可以出来视图的路由器
+router = DefaultRouter()
+router.register(r'books', BookInfoViewSet)
+# print(router.urls)
+urlpatterns += router.urls
